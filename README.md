@@ -1,6 +1,6 @@
 # tmux-fzf-search
 
-tmux-fzf-search uses ripgrep to search terminal scrollback buffer
+tmux-fzf-search uses [fzf](https://github.com/junegunn/fzf) to search terminal scrollback buffer, and jump to selected position.
 
 <!-- ![](preview.gif) -->
 
@@ -38,4 +38,13 @@ set -g @fzf-fzf-bind 's'
 
 ## Options
 
-## Tips
+## Attribution
+A huge thanks to
+[copycat](https://github.com/tmux-plugins/tmux-copycat) and
+[tmux-fzf-url](https://github.com/wfxr/tmux-fzf-url). I could not have
+written this without pointers and borrowing code from these two
+plugins.
+
+## License
+
+[MIT](https://wfxr.mit-license.org/2018) (c) Daniel Berg
