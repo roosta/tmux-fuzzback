@@ -9,6 +9,7 @@ _enter_mode() {
 }
 
 # "manually" go up in the scrollback for a number of lines
+# https://github.com/tmux-plugins/tmux-copycat/blob/e95528ebaeb6300d8620c8748a686b786056f374/scripts/copycat_jump.sh#L121
 _manually_go_up() {
 	local line_number="$1"
 	tmux send-keys -X -N "$line_number" cursor-up
@@ -29,7 +30,7 @@ main() {
   if [ "$corrected" -lt "$window_height" ]; then
     _manually_go_up "$corrected"
   else
-    tmux send-keys -X goto-line "$corrected"
+    tmux send-keys -X goto-line "$line_number"
   fi
 }
 
