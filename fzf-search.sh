@@ -1,12 +1,22 @@
 #!/usr/bin/env bash
 
-fzf_cmd() {
-    fzf-tmux --delimiter=":" --with-nth="2.." --ansi --no-preview
+_fzf_cmd() {
+    fzf-tmux --delimiter=":" --ansi --with-nth="2.." --no-preview
 }
 
-content="$(tmux capture-pane -e -J -p -S -)"
-match=$(echo "$content" | tac | nl -b 'a' -s ':' | fzf_cmd)
-line_nr=$(echo "$match" | cut -d':' -f1 | tr -d '[:space:]')
-echo "$line_nr"
-# echo $match
-# line_nr=()
+_enter_mode() {
+	tmux copy-mode
+}
+
+main() {
+  local conten, match, line_number corrected
+  content="$(tmux capture-pane -e -J -p -S -)"
+  match=$(echo "$content" | tac | nl -b 'a' -s ':' | _fzf_cmd)
+  line_number=$(echo "$match" | cut -d':' -f1 | tr -d '[:space:]')
+  corrected=$((line_number - 1))
+
+  _enter_mode
+  tmux send-keys -X goto-line "$corrected"
+}
+
+main
