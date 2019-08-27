@@ -26,6 +26,7 @@ main() {
   line_number=$(echo "$rest" | cut -d':' -f1 | tr -d '[:space:]')
   corrected=$((line_number - 1))
 	window_height="$(tmux display-message -p '#{pane_height}')"
+  max_lines=$(echo "$content" | wc -l)
 
   _enter_mode
   if [ "$corrected" -lt "$window_height" ]; then
