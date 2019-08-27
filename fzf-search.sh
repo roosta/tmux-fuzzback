@@ -11,13 +11,14 @@ _enter_mode() {
 # "manually" go up in the scrollback for a number of lines
 # https://github.com/tmux-plugins/tmux-copycat/blob/e95528ebaeb6300d8620c8748a686b786056f374/scripts/copycat_jump.sh#L121
 _manually_go_up() {
-	local line_number="$1"
-	tmux send-keys -X -N "$line_number" cursor-up
+	local line_number
+  line_number="$1"
+  tmux send-keys -X -N "$line_number" cursor-up
 	tmux send-keys -X start-of-line
 }
 
 main() {
-  local conten, match, line_number, corrected, window_height
+  local content match line_number corrected window_height query max_lines
   content="$(tmux capture-pane -e -J -p -S -)"
   match=$(echo "$content" | tac | nl -b 'a' -s ':' | _fzf_cmd)
   query=$(echo "$match" | cut -d$'\n' -f1)
