@@ -4,6 +4,14 @@ tmux-fzf-search uses [fzf](https://github.com/junegunn/fzf) to search terminal s
 
 <!-- ![](preview.gif) -->
 
+## Attribution
+This plugin would not be possible without the work done in
+[copycat](https://github.com/tmux-plugins/tmux-copycat). Go download
+it, use it, and give it some love. I also drew more than a little
+inspiration from
+[tmux-fzf-url](https://github.com/wfxr/tmux-fzf-url). Huge thanks to
+both.
+
 ## Installation
 
 ### Using [Tmux Plugin Manager](https://github.com/tmux-plugins/tpm) (recommended)
@@ -37,13 +45,6 @@ set -g @fzf-fzf-bind 's'
 ```
 
 ## Options
-
-## Attribution
-A huge thanks to
-[copycat](https://github.com/tmux-plugins/tmux-copycat) and
-[tmux-fzf-url](https://github.com/wfxr/tmux-fzf-url). I could not have
-written this without pointers and borrowing code from these two
-plugins.
 
 ## License
 
