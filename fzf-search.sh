@@ -17,23 +17,76 @@ _manually_go_up() {
 	tmux send-keys -X start-of-line
 }
 
+# maximum line number that can be reached via tmux 'jump'
+# https://github.com/tmux-plugins/tmux-copycat/blob/e95528ebaeb6300d8620c8748a686b786056f374/scripts/copycat_jump.sh#L159
+_get_max_jump() {
+	local max_jump scrollback_line_number window_height
+	local scrollback_line_number="$1"
+	local window_height="$2"
+  max_jump=$((scrollback_line_number - $window_height))
+	# max jump can't be lower than zero
+	if [ "$max_jump" -lt "0" ]; then
+		max_jump="0"
+	fi
+	echo "$max_jump"
+}
+
+# performs a jump to go to line
+# https://github.com/tmux-plugins/tmux-copycat/blob/e95528ebaeb6300d8620c8748a686b786056f374/scripts/copycat_jump.sh#L150
+_go_to_line_with_jump() {
+	local line_number="$1"
+	# first jumps to the "bottom" in copy mode so that jumps are consistent
+	tmux send-keys -X history-bottom
+	tmux send-keys -X start-of-line
+	tmux send-keys -X goto-line "$line_number"
+}
+
+_get_line_number() {
+  local position line_number
+  position=$(echo "$1" | cut -d':' -f1 | tr -d '[:space:]')
+  line_number=$((position - 1))
+  echo "$line_number"
+}
+
 main() {
-  local content match line_number corrected window_height query max_lines
+  local content match line_number window_height query max_lines max_jump correction correct_line_number
   content="$(tmux capture-pane -e -J -p -S -)"
   match=$(echo "$content" | tac | nl -b 'a' -s ':' | _fzf_cmd)
   query=$(echo "$match" | cut -d$'\n' -f1)
   rest=$(echo "$match" | cut -d$'\n' -f2)
-  line_number=$(echo "$rest" | cut -d':' -f1 | tr -d '[:space:]')
-  corrected=$((line_number - 1))
+  line_number=$(_get_line_number "$rest")
 	window_height="$(tmux display-message -p '#{pane_height}')"
   max_lines=$(echo "$content" | wc -l)
+  max_jump=$(_get_max_jump "$max_lines" "$window_height")
+
+	if [ "$line_number" -gt "$max_jump" ]; then
+		# We need to 'reach' a line number that is not accessible via 'jump'.
+		# Introducing 'correction'
+		correct_line_number="$max_jump"
+		correction=$((line_number - "$correct_line_number"))
+	else
+		# we can reach the desired line number via 'jump'. Correction not needed.
+		correct_line_number="$line_number"
+	fi
 
   _enter_mode
-  if [ "$corrected" -lt "$window_height" ]; then
-    _manually_go_up "$corrected"
-  else
-    tmux send-keys -X goto-line "$line_number"
-  fi
+	_go_to_line_with_jump "$correct_line_number"
+
+	if [ "$correction" -gt "0" ]; then
+		_manually_go_up "$correction"
+	fi
+  # echo $correction
+
+  # _enter_mode
+	# if [ "$correction" -gt "0" ]; then
+	# 	_manually_go_up "$correction"
+	# fi
+
+  # if [ "$line_number" -lt "$window_height" ]; then
+  #   _manually_go_up $((line_number -1))
+  # else
+  #   tmux send-keys -X goto-line "$line_number"
+  # fi
 }
 
 main
