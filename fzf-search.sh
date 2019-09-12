@@ -41,6 +41,28 @@ _go_to_line_with_jump() {
 	tmux send-keys -X goto-line "$line_number"
 }
 
+_create_padding_below_result() {
+	local number_of_lines="$1"
+	local maximum_padding="$2"
+	local padding
+
+	# Padding should not be greater than half pane height
+	# (it wouldn't be centered then).
+	if [ "$number_of_lines" -gt "$maximum_padding" ]; then
+		padding="$maximum_padding"
+	else
+		padding="$number_of_lines"
+	fi
+
+	# cannot create padding, exit function
+	if [ "$padding" -eq "0" ]; then
+		return
+	fi
+
+	tmux send-keys -X -N "$padding" cursor-down
+	tmux send-keys -X -N "$padding" cursor-up
+}
+
 _get_line_number() {
   local position line_number
   position=$(echo "$1" | cut -d':' -f1 | tr -d '[:space:]')
@@ -58,6 +80,7 @@ main() {
 	window_height="$(tmux display-message -p '#{pane_height}')"
   max_lines=$(echo "$content" | wc -l)
   max_jump=$(_get_max_jump "$max_lines" "$window_height")
+	correction="0"
 
 	if [ "$line_number" -gt "$max_jump" ]; then
 		# We need to 'reach' a line number that is not accessible via 'jump'.
@@ -75,6 +98,15 @@ main() {
 	if [ "$correction" -gt "0" ]; then
 		_manually_go_up "$correction"
 	fi
+
+	# If no corrections (meaning result is not at the top of scrollback)
+	# we can then 'center' the result within a pane.
+	if [ "$correction" -eq "0" ]; then
+		local half_window_height="$((window_height / 2))"
+		# creating as much padding as possible, up to half pane height
+		_create_padding_below_result "$line_number" "$half_window_height"
+	fi
+
   # echo $correction
 
   # _enter_mode
