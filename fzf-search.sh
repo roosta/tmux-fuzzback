@@ -36,7 +36,7 @@ _get_max_jump() {
 _go_to_line_with_jump() {
 	local line_number="$1"
 	# first jumps to the "bottom" in copy mode so that jumps are consistent
-	tmux send-keys -X history-bottom
+	# tmux send-keys -X history-bottom
 	tmux send-keys -X start-of-line
 	tmux send-keys -X goto-line "$line_number"
 }
