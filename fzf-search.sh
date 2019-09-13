@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# set -euo pipefail
+# IFS=$'\n\t'
+
 _fzf_cmd() {
   fzf-tmux --delimiter=":" \
            --ansi \
@@ -81,42 +84,46 @@ main() {
   query=$(echo "$match" | cut -d$'\n' -f1)
   rest=$(echo "$match" | cut -d$'\n' -f2)
   line_number=$(_get_line_number "$rest")
-	window_height="$(tmux display-message -p '#{pane_height}')"
+  window_height="$(tmux display-message -p '#{pane_height}')"
   max_lines=$(echo "$content" | wc -l)
   max_jump=$(_get_max_jump "$max_lines" "$window_height")
-	correction="0"
+  correction="0"
 
-	if [ "$line_number" -gt "$max_jump" ]; then
-		# We need to 'reach' a line number that is not accessible via 'jump'.
-		# Introducing 'correction'
-		correct_line_number="$max_jump"
-		correction=$((line_number - "$correct_line_number"))
-	else
-		# we can reach the desired line number via 'jump'. Correction not needed.
-		correct_line_number="$line_number"
-	fi
+  if [ -n "$match" ]; then
 
-  _enter_mode
-	_go_to_line_with_jump "$correct_line_number"
 
-	if [ "$correction" -gt "0" ]; then
-		_manually_go_up "$correction"
-	fi
+    if [ "$line_number" -gt "$max_jump" ]; then
+      # We need to 'reach' a line number that is not accessible via 'jump'.
+      # Introducing 'correction'
+      correct_line_number="$max_jump"
+      correction=$((line_number - "$correct_line_number"))
+    else
+      # we can reach the desired line number via 'jump'. Correction not needed.
+      correct_line_number="$line_number"
+    fi
 
-	# If no corrections (meaning result is not at the top of scrollback)
-	# we can then 'center' the result within a pane.
-	if [ "$correction" -eq "0" ]; then
-		local half_window_height="$((window_height / 2))"
-		# creating as much padding as possible, up to half pane height
-		_create_padding_below_result "$line_number" "$half_window_height"
-	fi
+    _enter_mode
+    _go_to_line_with_jump "$correct_line_number"
 
+    if [ "$correction" -gt "0" ]; then
+      _manually_go_up "$correction"
+    fi
+
+    # If no corrections (meaning result is not at the top of scrollback)
+    # we can then 'center' the result within a pane.
+    if [ "$correction" -eq "0" ]; then
+      local half_window_height="$((window_height / 2))"
+      # creating as much padding as possible, up to half pane height
+      _create_padding_below_result "$line_number" "$half_window_height"
+    fi
+
+  fi
   # echo $correction
 
   # _enter_mode
-	# if [ "$correction" -gt "0" ]; then
-	# 	_manually_go_up "$correction"
-	# fi
+  # if [ "$correction" -gt "0" ]; then
+  # 	_manually_go_up "$correction"
+  # fi
 
   # if [ "$line_number" -lt "$window_height" ]; then
   #   _manually_go_up $((line_number -1))
