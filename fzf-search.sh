@@ -35,12 +35,12 @@ _get_max_jump() {
 # https://github.com/tmux-plugins/tmux-copycat/blob/e95528ebaeb6300d8620c8748a686b786056f374/scripts/copycat_jump.sh#L150
 _go_to_line_with_jump() {
 	local line_number="$1"
-	# first jumps to the "bottom" in copy mode so that jumps are consistent
 	# tmux send-keys -X history-bottom
 	tmux send-keys -X start-of-line
 	tmux send-keys -X goto-line "$line_number"
 }
 
+# https://github.com/tmux-plugins/tmux-copycat/blob/e95528ebaeb6300d8620c8748a686b786056f374/scripts/copycat_jump.sh#L127
 _create_padding_below_result() {
 	local number_of_lines="$1"
 	local maximum_padding="$2"
