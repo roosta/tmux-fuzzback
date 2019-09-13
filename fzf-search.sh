@@ -7,6 +7,7 @@ _fzf_cmd() {
   fzf-tmux --delimiter=":" \
            --ansi \
            --with-nth="2.." \
+           --no-sort \
            --no-preview \
            --print-query
 }
