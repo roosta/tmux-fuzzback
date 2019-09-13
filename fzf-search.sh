@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# set -euo pipefail
-# IFS=$'\n\t'
+set -uo pipefail
+IFS=$'\n\t'
 
 _fzf_cmd() {
   fzf-tmux --delimiter=":" \
