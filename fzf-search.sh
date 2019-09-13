@@ -118,18 +118,6 @@ main() {
     fi
 
   fi
-  # echo $correction
-
-  # _enter_mode
-  # if [ "$correction" -gt "0" ]; then
-  # 	_manually_go_up "$correction"
-  # fi
-
-  # if [ "$line_number" -lt "$window_height" ]; then
-  #   _manually_go_up $((line_number -1))
-  # else
-  #   tmux send-keys -X goto-line "$line_number"
-  # fi
 }
 
 main
