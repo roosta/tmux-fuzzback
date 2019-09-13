@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 
 _fzf_cmd() {
-    fzf-tmux --delimiter=":" --ansi --with-nth="2.." --no-preview --print-query
+  fzf-tmux --delimiter=":" \
+           --ansi \
+           --with-nth="2.." \
+           --no-preview \
+           --print-query
 }
 
 _enter_mode() {
