@@ -28,28 +28,13 @@ _escape_backslash() {
 }
 
 
-# https://github.com/tmux-plugins/tmux-copycat/blob/e95528ebaeb6300d8620c8748a686b786056f374/scripts/copycat_jump.sh#L73
 _get_query_line_position() {
   local query="$1"
   local result_line="$2"
-  local platform index zero_index
+  local column zero_index
 
-  # OS X awk cannot have `=` as the first char in the variable (bug in awk).
-  # If exists, changing the `=` character with `.` to avoid error.
-  platform="$(uname)"
-  if [ "$platform" == "Darwin" ]; then
-    result_line="$(echo "$result_line" | sed 's/^=/./')"
-    query="$(echo "$query" | sed 's/^=/./')"
-  fi
-
-  # awk treats \r, \n, \t etc as single characters and that messes up query
-  # highlighting. For that reason, we're escaping backslashes so above chars
-  # are treated literally.
-  result_line="$(_escape_backslash "$result_line")"
-  query="$(_escape_backslash "$query")"
-
-  index=$(awk -v a="$result_line" -v b="$query" 'BEGIN{print index(a,b)}')
-  zero_index=$((index - 1))
+  column=$(echo "$result_line" | ag --column "$query" | cut -d':' -f1)
+  zero_index=$((column - 1))
   echo "$zero_index"
 }
 
