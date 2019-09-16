@@ -32,7 +32,18 @@ _escape_backslash() {
 }
 
 
-_get_match_line_position() {
+_select() {
+	local query="$1"
+	local length="${#query}"
+	tmux send-keys -X begin-selection
+	tmux send-keys -X -N "$length" cursor-right
+	if [ "$TMUX_COPY_MODE" == "vi" ]; then
+		tmux send-keys -X cursor-left # selection correction for 1 char
+	fi
+}
+
+# https://github.com/tmux-plugins/tmux-copycat/blob/e95528ebaeb6300d8620c8748a686b786056f374/scripts/copycat_jump.sh#L73
+_get_query_line_position() {
 	local query="$1"
   local result_line="$2"
 	local platform index zero_index
@@ -45,7 +56,7 @@ _get_match_line_position() {
 		query="$(echo "$query" | sed 's/^=/./')"
 	fi
 
-	# awk treats \r, \n, \t etc as single characters and that messes up match
+	# awk treats \r, \n, \t etc as single characters and that messes up query
 	# highlighting. For that reason, we're escaping backslashes so above chars
 	# are treated literally.
 	result_line="$(_escape_backslash "$result_line")"
@@ -112,7 +123,7 @@ _get_line_number() {
 main() {
 
   local content match line_number window_height query max_lines
-  max_jump correction correct_line_number trimmed_line match_line_position
+  max_jump correction correct_line_number trimmed_line query_line_position
 
   content="$(tmux capture-pane -e -J -p -S -)"
   match=$(echo "$content" | tac | nl -b 'a' -s ':' | _fzf_cmd)
@@ -127,7 +138,7 @@ main() {
     max_lines=$(echo "$content" | wc -l)
     max_jump=$(_get_max_jump "$max_lines" "$window_height")
     correction="0"
-    match_line_position=$(_get_match_line_position "$query" "$trimmed_line")
+    query_line_position=$(_get_query_line_position "$query" "$trimmed_line")
 
     # Jump vertically
     # -----------------
@@ -160,8 +171,8 @@ main() {
 
     # Jump horizontally
     # ------------------
-    if [ "$match_line_position" -gt "0" ]; then
-      tmux send-keys -X -N "$match_line_position" cursor-right
+    if [ "$query_line_position" -gt "0" ]; then
+      tmux send-keys -X -N "$query_line_position" cursor-right
     fi
 
   fi
