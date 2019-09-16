@@ -13,104 +13,104 @@ _fzf_cmd() {
 }
 
 _enter_mode() {
-	tmux copy-mode
+  tmux copy-mode
 }
 
 # "manually" go up in the scrollback for a number of lines
 # https://github.com/tmux-plugins/tmux-copycat/blob/e95528ebaeb6300d8620c8748a686b786056f374/scripts/copycat_jump.sh#L121
 _manually_go_up() {
-	local line_number
+  local line_number
   line_number="$1"
   tmux send-keys -X -N "$line_number" cursor-up
-	tmux send-keys -X start-of-line
+  tmux send-keys -X start-of-line
 }
 
 # https://github.com/tmux-plugins/tmux-copycat/blob/e95528ebaeb6300d8620c8748a686b786056f374/scripts/copycat_jump.sh#L68
 _escape_backslash() {
-	local string="$1"
-	echo "$(echo "$string" | sed 's/\\/\\\\/g')"
+  local string="$1"
+  echo "$(echo "$string" | sed 's/\\/\\\\/g')"
 }
 
 
 _select() {
-	local query="$1"
-	local length="${#query}"
-	tmux send-keys -X begin-selection
-	tmux send-keys -X -N "$length" cursor-right
-	if [ "$TMUX_COPY_MODE" == "vi" ]; then
-		tmux send-keys -X cursor-left # selection correction for 1 char
-	fi
+  local query="$1"
+  local length="${#query}"
+  tmux send-keys -X begin-selection
+  tmux send-keys -X -N "$length" cursor-right
+  if [ "$TMUX_COPY_MODE" == "vi" ]; then
+    tmux send-keys -X cursor-left # selection correction for 1 char
+  fi
 }
 
 # https://github.com/tmux-plugins/tmux-copycat/blob/e95528ebaeb6300d8620c8748a686b786056f374/scripts/copycat_jump.sh#L73
 _get_query_line_position() {
-	local query="$1"
+  local query="$1"
   local result_line="$2"
-	local platform index zero_index
+  local platform index zero_index
 
-	# OS X awk cannot have `=` as the first char in the variable (bug in awk).
-	# If exists, changing the `=` character with `.` to avoid error.
-	platform="$(uname)"
-	if [ "$platform" == "Darwin" ]; then
-		result_line="$(echo "$result_line" | sed 's/^=/./')"
-		query="$(echo "$query" | sed 's/^=/./')"
-	fi
+  # OS X awk cannot have `=` as the first char in the variable (bug in awk).
+  # If exists, changing the `=` character with `.` to avoid error.
+  platform="$(uname)"
+  if [ "$platform" == "Darwin" ]; then
+    result_line="$(echo "$result_line" | sed 's/^=/./')"
+    query="$(echo "$query" | sed 's/^=/./')"
+  fi
 
-	# awk treats \r, \n, \t etc as single characters and that messes up query
-	# highlighting. For that reason, we're escaping backslashes so above chars
-	# are treated literally.
-	result_line="$(_escape_backslash "$result_line")"
-	query="$(_escape_backslash "$query")"
+  # awk treats \r, \n, \t etc as single characters and that messes up query
+  # highlighting. For that reason, we're escaping backslashes so above chars
+  # are treated literally.
+  result_line="$(_escape_backslash "$result_line")"
+  query="$(_escape_backslash "$query")"
 
-	index=$(awk -v a="$result_line" -v b="$query" 'BEGIN{print index(a,b)}')
-	zero_index=$((index - 1))
-	echo "$zero_index"
+  index=$(awk -v a="$result_line" -v b="$query" 'BEGIN{print index(a,b)}')
+  zero_index=$((index - 1))
+  echo "$zero_index"
 }
 
 # maximum line number that can be reached via tmux 'jump'
 # https://github.com/tmux-plugins/tmux-copycat/blob/e95528ebaeb6300d8620c8748a686b786056f374/scripts/copycat_jump.sh#L159
 _get_max_jump() {
-	local max_jump scrollback_line_number window_height
-	local scrollback_line_number="$1"
-	local window_height="$2"
+  local max_jump scrollback_line_number window_height
+  local scrollback_line_number="$1"
+  local window_height="$2"
   max_jump=$((scrollback_line_number - $window_height))
-	# max jump can't be lower than zero
-	if [ "$max_jump" -lt "0" ]; then
-		max_jump="0"
-	fi
-	echo "$max_jump"
+  # max jump can't be lower than zero
+  if [ "$max_jump" -lt "0" ]; then
+    max_jump="0"
+  fi
+  echo "$max_jump"
 }
 
 # performs a jump to go to line
 # https://github.com/tmux-plugins/tmux-copycat/blob/e95528ebaeb6300d8620c8748a686b786056f374/scripts/copycat_jump.sh#L150
 _go_to_line_with_jump() {
-	local line_number="$1"
-	# tmux send-keys -X history-bottom
-	tmux send-keys -X start-of-line
-	tmux send-keys -X goto-line "$line_number"
+  local line_number="$1"
+  # tmux send-keys -X history-bottom
+  tmux send-keys -X start-of-line
+  tmux send-keys -X goto-line "$line_number"
 }
 
 # https://github.com/tmux-plugins/tmux-copycat/blob/e95528ebaeb6300d8620c8748a686b786056f374/scripts/copycat_jump.sh#L127
 _create_padding_below_result() {
-	local number_of_lines="$1"
-	local maximum_padding="$2"
-	local padding
+  local number_of_lines="$1"
+  local maximum_padding="$2"
+  local padding
 
-	# Padding should not be greater than half pane height
-	# (it wouldn't be centered then).
-	if [ "$number_of_lines" -gt "$maximum_padding" ]; then
-		padding="$maximum_padding"
-	else
-		padding="$number_of_lines"
-	fi
+  # Padding should not be greater than half pane height
+  # (it wouldn't be centered then).
+  if [ "$number_of_lines" -gt "$maximum_padding" ]; then
+    padding="$maximum_padding"
+  else
+    padding="$number_of_lines"
+  fi
 
-	# cannot create padding, exit function
-	if [ "$padding" -eq "0" ]; then
-		return
-	fi
+  # cannot create padding, exit function
+  if [ "$padding" -eq "0" ]; then
+    return
+  fi
 
-	tmux send-keys -X -N "$padding" cursor-down
-	tmux send-keys -X -N "$padding" cursor-up
+  tmux send-keys -X -N "$padding" cursor-down
+  tmux send-keys -X -N "$padding" cursor-up
 }
 
 _get_line_number() {
