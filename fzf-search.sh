@@ -138,7 +138,7 @@ main() {
       correct_line_number="$line_number"
     fi
 
-    _enter_mode
+    tmux copy-mode
     _go_to_line_with_jump "$correct_line_number"
 
     if [ "$correction" -gt "0" ]; then
