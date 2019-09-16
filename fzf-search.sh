@@ -14,19 +14,12 @@ _fzf_cmd() {
 
 # "manually" go up in the scrollback for a number of lines
 # https://github.com/tmux-plugins/tmux-copycat/blob/e95528ebaeb6300d8620c8748a686b786056f374/scripts/copycat_jump.sh#L121
-_manually_go_up() {
+_fzfs_manually_go_up() {
   local line_number
   line_number="$1"
   tmux send-keys -X -N "$line_number" cursor-up
   tmux send-keys -X start-of-line
 }
-
-# https://github.com/tmux-plugins/tmux-copycat/blob/e95528ebaeb6300d8620c8748a686b786056f374/scripts/copycat_jump.sh#L68
-_escape_backslash() {
-  local string="$1"
-  echo "$(echo "$string" | sed 's/\\/\\\\/g')"
-}
-
 
 _get_query_line_position() {
   local query="$1"
