@@ -12,10 +12,6 @@ _fzf_cmd() {
            --print-query
 }
 
-_enter_mode() {
-  tmux copy-mode
-}
-
 # "manually" go up in the scrollback for a number of lines
 # https://github.com/tmux-plugins/tmux-copycat/blob/e95528ebaeb6300d8620c8748a686b786056f374/scripts/copycat_jump.sh#L121
 _manually_go_up() {
@@ -31,16 +27,6 @@ _escape_backslash() {
   echo "$(echo "$string" | sed 's/\\/\\\\/g')"
 }
 
-
-_select() {
-  local query="$1"
-  local length="${#query}"
-  tmux send-keys -X begin-selection
-  tmux send-keys -X -N "$length" cursor-right
-  if [ "$TMUX_COPY_MODE" == "vi" ]; then
-    tmux send-keys -X cursor-left # selection correction for 1 char
-  fi
-}
 
 # https://github.com/tmux-plugins/tmux-copycat/blob/e95528ebaeb6300d8620c8748a686b786056f374/scripts/copycat_jump.sh#L73
 _get_query_line_position() {
