@@ -116,22 +116,21 @@ main() {
 
   content="$(tmux capture-pane -e -J -p -S -)"
   match=$(echo "$content" | tac | nl -b 'a' -s ':' | _fzf_cmd)
-  query=$(echo "$match" | cut -d$'\n' -f1)
-  rest=$(echo "$match" | cut -d$'\n' -f2)
-  trimmed_line=$(echo "$rest" | sed 's/[[:space:]]\+[[:digit:]]\+://')
-  line_number=$(_get_line_number "$rest")
-  window_height="$(tmux display-message -p '#{pane_height}')"
-  max_lines=$(echo "$content" | wc -l)
-  max_jump=$(_get_max_jump "$max_lines" "$window_height")
-  correction="0"
-  match_line_position=$(_get_match_line_position "$query" "$trimmed_line")
 
   if [ -n "$match" ]; then
 
-    # echo $query
-    # echo $trimmed_line
-    # echo $match_line_position
+    query=$(echo "$match" | cut -d$'\n' -f1)
+    rest=$(echo "$match" | cut -d$'\n' -f2)
+    trimmed_line=$(echo "$rest" | sed 's/[[:space:]]\+[[:digit:]]\+://')
+    line_number=$(_get_line_number "$rest")
+    window_height="$(tmux display-message -p '#{pane_height}')"
+    max_lines=$(echo "$content" | wc -l)
+    max_jump=$(_get_max_jump "$max_lines" "$window_height")
+    correction="0"
+    match_line_position=$(_get_match_line_position "$query" "$trimmed_line")
 
+    # Jump vertically
+    # -----------------
     if [ "$line_number" -gt "$max_jump" ]; then
       # We need to 'reach' a line number that is not accessible via 'jump'.
       # Introducing 'correction'
@@ -149,6 +148,8 @@ main() {
       _manually_go_up "$correction"
     fi
 
+    # Padding
+    # -------------
     # If no corrections (meaning result is not at the top of scrollback)
     # we can then 'center' the result within a pane.
     if [ "$correction" -eq "0" ]; then
@@ -157,6 +158,8 @@ main() {
       _create_padding_below_result "$line_number" "$half_window_height"
     fi
 
+    # Jump horizontally
+    # ------------------
     if [ "$match_line_position" -gt "0" ]; then
       tmux send-keys -X -N "$match_line_position" cursor-right
     fi
