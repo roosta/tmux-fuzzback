@@ -25,11 +25,12 @@ _manually_go_up() {
 	tmux send-keys -X start-of-line
 }
 
-
+# https://github.com/tmux-plugins/tmux-copycat/blob/e95528ebaeb6300d8620c8748a686b786056f374/scripts/copycat_jump.sh#L68
 _escape_backslash() {
 	local string="$1"
 	echo "$(echo "$string" | sed 's/\\/\\\\/g')"
 }
+
 
 _get_match_line_position() {
 	local query="$1"
