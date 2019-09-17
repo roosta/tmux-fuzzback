@@ -89,7 +89,7 @@ main() {
   local content match line_number window_height query max_lines
   max_jump correction correct_line_number trimmed_line query_line_position
 
-  content="$(tmux capture-pane -e -J -p -S -)"
+  content="$(tmux capture-pane -e -p -S -)"
   match=$(echo "$content" | tac | nl -b 'a' -s ':' | fzf_search::fzf_cmd)
 
   if [ -n "$match" ]; then
