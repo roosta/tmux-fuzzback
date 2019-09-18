@@ -16,8 +16,8 @@ both.
 [fzf](https://github.com/junegunn/fzf) is required, and optionally
 either [ripgrep](https://github.com/BurntSushi/ripgrep), or
 [ag](https://github.com/ggreer/the_silver_searcher) is required to
-jump to search query column. If none of these are found that feature
-will not run.
+jump to search query column. If none of these are found
+tmux-fzf-search will jump to line number but not column.
 
 ## Installation
 
