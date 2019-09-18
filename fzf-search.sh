@@ -12,6 +12,14 @@ fzf_search::fzf_cmd() {
            --print-query
 }
 
+fzf_search::command() {
+  if hash ag 2>/dev/null; then
+    ag --column "$@"
+  elif hash rg 2>/dev/null; then
+    rg -N --column "$@"
+  fi
+}
+
 # "manually" go up in the scrollback for a number of lines
 # https://github.com/tmux-plugins/tmux-copycat/blob/e95528ebaeb6300d8620c8748a686b786056f374/scripts/copycat_jump.sh#L121
 fzf_search::manually_go_up() {
@@ -26,7 +34,7 @@ fzf_search::get_query_line_position() {
   local result_line="$2"
   local column zero_index
 
-  column=$(echo "$result_line" | ag --column "$query" | cut -d':' -f1)
+  column=$(echo "$result_line" | fzf_search::command "$query" | cut -d':' -f1)
   zero_index=$((column - 1))
   echo "$zero_index"
 }
