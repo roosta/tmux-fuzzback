@@ -12,6 +12,13 @@ inspiration from
 [tmux-fzf-url](https://github.com/wfxr/tmux-fzf-url). Huge thanks to
 both.
 
+## Requirements
+[fzf](https://github.com/junegunn/fzf) is required, and optionally
+either [ripgrep](https://github.com/BurntSushi/ripgrep), or
+[ag](https://github.com/ggreer/the_silver_searcher) is required to
+jump to search query column. If none of these are found that feature
+will not run.
+
 ## Installation
 
 ### Using [Tmux Plugin Manager](https://github.com/tmux-plugins/tpm) (recommended)
