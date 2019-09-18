@@ -34,7 +34,7 @@ git clone https://github.com/roosta/tmux-fzf-search
 
 Add this to the bottom of `.tmux.conf`
 ```
-run-shell ~/path/to/repo/fzf_search.tmux
+run-shell ~/path/to/repo/fzf-search.tmux
 ```
 
 Reload TMUX env
