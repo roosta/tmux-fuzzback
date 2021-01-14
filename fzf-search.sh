@@ -45,7 +45,7 @@ fzf_search::get_max_jump() {
   local max_jump scrollback_line_number window_height
   local scrollback_line_number="$1"
   local window_height="$2"
-  max_jump=$((scrollback_line_number - $window_height))
+  max_jump=$((scrollback_line_number - window_height))
   # max jump can't be lower than zero
   if [ "$max_jump" -lt "0" ]; then
     max_jump="0"
