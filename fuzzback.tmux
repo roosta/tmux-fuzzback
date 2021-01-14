@@ -10,6 +10,6 @@ tmux_get() {
     [ -n "$value" ] && echo "$value" || echo "$2"
 }
 
-key="$(tmux_get '@fzf-search-bind' '?')"
+key="$(tmux_get '@fuzzback-bind' '?')"
 
-tmux bind-key "$key" run -b "$CURRENT_DIR/fzf-search.sh";
+tmux bind-key "$key" run -b "$CURRENT_DIR/fuzzback.sh";
