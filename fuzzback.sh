@@ -118,7 +118,7 @@ main() {
       # We need to 'reach' a line number that is not accessible via 'jump'.
       # Introducing 'correction'
       correct_line_number="$max_jump"
-      correction=$((line_number - "$correct_line_number"))
+      correction=$((line_number - correct_line_number))
     else
       # we can reach the desired line number via 'jump'. Correction not needed.
       correct_line_number="$line_number"
