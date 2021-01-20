@@ -22,7 +22,7 @@ fuzzback::command() {
 
 # "manually" go up in the scrollback for a number of lines
 # https://github.com/tmux-plugins/tmux-copycat/blob/e95528ebaeb6300d8620c8748a686b786056f374/scripts/copycat_jump.sh#L121
-fuzzback::manually_go_up() {
+fuzzback::cursor_up() {
   local line_number
   line_number="$1"
   tmux send-keys -X -N "$line_number" cursor-up
@@ -55,7 +55,7 @@ fuzzback::get_max_jump() {
 
 # performs a jump to go to line
 # https://github.com/tmux-plugins/tmux-copycat/blob/e95528ebaeb6300d8620c8748a686b786056f374/scripts/copycat_jump.sh#L150
-fuzzback::go_to_line_with_jump() {
+fuzzback::goto() {
   local line_number="$1"
   # tmux send-keys -X history-bottom
   tmux send-keys -X start-of-line
@@ -125,10 +125,10 @@ main() {
     fi
 
     tmux copy-mode
-    fuzzback::go_to_line_with_jump "$correct_line_number"
+    fuzzback::goto "$correct_line_number"
 
     if [ "$correction" -gt "0" ]; then
-      fuzzback::manually_go_up "$correction"
+      fuzzback::cursor_up "$correction"
     fi
 
     # Padding
