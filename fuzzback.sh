@@ -42,10 +42,10 @@ fuzzback::get_query_line_position() {
 # maximum line number that can be reached via tmux 'jump'
 # https://github.com/tmux-plugins/tmux-copycat/blob/e95528ebaeb6300d8620c8748a686b786056f374/scripts/copycat_jump.sh#L159
 fuzzback::get_max_jump() {
-  local max_jump scrollback_line_number window_height
-  local scrollback_line_number="$1"
+  local max_jump max_lines window_height
+  local max_lines="$1"
   local window_height="$2"
-  max_jump=$((scrollback_line_number - window_height))
+  max_jump=$((max_lines - window_height))
   # max jump can't be lower than zero
   if [ "$max_jump" -lt "0" ]; then
     max_jump="0"
