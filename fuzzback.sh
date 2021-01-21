@@ -15,6 +15,7 @@ fuzzback::fzf_cmd() {
   fzf-tmux --delimiter=":" \
            --ansi \
            --with-nth="2.." \
+           --no-multi \
            --no-sort \
            --no-preview \
            --print-query
