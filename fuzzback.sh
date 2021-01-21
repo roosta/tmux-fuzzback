@@ -153,6 +153,9 @@ main() {
       fuzzback::cursor_up "$correction"
     fi
 
+    # Set cursor to start of line when all vertical movement is done
+    tmux send-keys -X start-of-line
+
     # Centering
     # -------------
     # If no corrections (meaning result is not at the top of scrollback)
@@ -166,7 +169,6 @@ main() {
     # Move to column
     # ------------------
     if [ "$column" -gt "0" ]; then
-      tmux send-keys -X start-of-line
       tmux send-keys -X -N "$column" cursor-right
     fi
 
