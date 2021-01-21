@@ -12,7 +12,7 @@ fuzzback::fzf_cmd() {
            --print-query
 }
 
-fuzzback::command() {
+fuzzback::search_cmd() {
   if hash ag 2>/dev/null; then
     ag --column "$@"
   elif hash rg 2>/dev/null; then
@@ -34,7 +34,7 @@ fuzzback::get_query_line_position() {
   local result_line="$2"
   local column zero_index
 
-  column=$(echo "$result_line" | fuzzback::command "$query" | cut -d':' -f1)
+  column=$(echo "$result_line" | fuzzback::search_cmd "$query" | cut -d':' -f1)
   zero_index=$((column - 1))
   echo "$zero_index"
 }
