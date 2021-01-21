@@ -60,7 +60,7 @@ fuzzback::goto() {
   tmux send-keys -X goto-line "$line_number"
 }
 
-# Center text on screen
+# Center result on screen
 # https://github.com/tmux-plugins/tmux-copycat/blob/e95528ebaeb6300d8620c8748a686b786056f374/scripts/copycat_jump.sh#L127
 fuzzback::center() {
   local number_of_lines="$1"
