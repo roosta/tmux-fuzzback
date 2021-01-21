@@ -21,14 +21,6 @@ fuzzback::fzf_cmd() {
            --print-query
 }
 
-fuzzback::search_cmd() {
-  if hash rg 2>/dev/null; then
-    rg -N --column "$@"
-  elif hash ag 2>/dev/null; then
-    ag --column "$@"
-  fi
-}
-
 # Move cursor up in scrollback buffer, used when goto_line fails and we have to
 # correct
 fuzzback::cursor_up() {
@@ -37,13 +29,34 @@ fuzzback::cursor_up() {
   tmux send-keys -X -N "$line_number" cursor-up
 }
 
+# https://github.com/tmux-plugins/tmux-copycat/blob/d7f7e6c1de0bc0d6915f4beea5be6a8a42045c09/scripts/copycat_jump.sh#L68
+fuzzback::escape_backslash() {
+  local string="$1"
+  echo "$string" | sed 's/\\/\\\\/g'
+}
+
 # Get columns position of search query
+# https://github.com/tmux-plugins/tmux-copycat/blob/d7f7e6c1de0bc0d6915f4beea5be6a8a42045c09/scripts/copycat_jump.sh#L73
 fuzzback::query_column() {
   local query="$1"
   local result_line="$2"
-  local column zero_index
+  local column zero_index platform
 
-  column=$(echo "$result_line" | fuzzback::search_cmd "$query" | cut -d':' -f1)
+  # OS X awk cannot have `=` as the first char in the variable (bug in awk).
+  # If exists, changing the `=` character with `.` to avoid error.
+  platform="$(uname)"
+  if [ "$platform" == "Darwin" ]; then
+    result_line="$(echo "$result_line" | sed 's/^=/./')"
+    query="$(echo "$query" | sed 's/^=/./')"
+  fi
+
+  # awk treats \r, \n, \t etc as single characters and that messes up match
+  # highlighting. For that reason, we're escaping backslashes so above chars
+  # are treated literally.
+  result_line="$(fuzzback::escape_backslash "$result_line")"
+  query="$(fuzzback::escape_backslash "$query")"
+
+  column=$($AWK_CMD -v a="$result_line" -v b="$query" 'BEGIN{print index(a,b)}')
   zero_index=$((column - 1))
   echo "$zero_index"
 }
