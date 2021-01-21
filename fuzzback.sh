@@ -29,7 +29,8 @@ fuzzback::cursor_up() {
   tmux send-keys -X start-of-line
 }
 
-fuzzback::get_query_line_position() {
+# Get columns position of search query
+fuzzback::query_column() {
   local query="$1"
   local result_line="$2"
   local column zero_index
@@ -92,7 +93,7 @@ fuzzback::get_line_number() {
 main() {
 
   local content match line_number window_height query max_lines max_jump
-  local correction correct_line_number trimmed_line query_line_position
+  local correction correct_line_number trimmed_line column
 
   content="$(tmux capture-pane -e -p -S -)"
   match=$(echo "$content" | tac | nl -b 'a' -s ':' | fuzzback::fzf_cmd)
@@ -107,7 +108,7 @@ main() {
     max_lines=$(echo "$content" | wc -l)
     max_jump=$(fuzzback::get_max_jump "$max_lines" "$window_height")
     correction="0"
-    query_line_position=$(fuzzback::get_query_line_position "$query" "$trimmed_line")
+    column=$(fuzzback::query_column "$query" "$trimmed_line")
 
     # Jump vertically
     # -----------------
