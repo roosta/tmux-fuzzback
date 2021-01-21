@@ -20,7 +20,7 @@ fuzzback::search_cmd() {
   fi
 }
 
-# Move cursor up in scrollback buffer, used when goto fails and we have to
+# Move cursor up in scrollback buffer, used when goto_line fails and we have to
 # correct
 fuzzback::cursor_up() {
   local line_number
@@ -55,7 +55,7 @@ fuzzback::get_max_jump() {
 }
 
 # Goto line in scrollback buffer
-fuzzback::goto() {
+fuzzback::goto_line() {
   local line_number="$1"
   tmux send-keys -X goto-line "$line_number"
 }
@@ -124,7 +124,7 @@ main() {
     fi
 
     tmux copy-mode
-    fuzzback::goto "$correct_line_number"
+    fuzzback::goto_line "$correct_line_number"
 
     if [ "$correction" -gt "0" ]; then
       fuzzback::cursor_up "$correction"
