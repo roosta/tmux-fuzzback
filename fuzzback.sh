@@ -4,6 +4,10 @@
 set -uo pipefail
 IFS=$'\n\t'
 
+# Pull in helpers
+CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+# shellcheck source=helpers.sh
+. "$CURRENT_DIR/helpers.sh"
 
 fuzzback::fzf_cmd() {
   fzf-tmux --delimiter=":" \
