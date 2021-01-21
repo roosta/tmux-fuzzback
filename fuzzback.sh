@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2001
 
 set -uo pipefail
 IFS=$'\n\t'
+
 
 fuzzback::fzf_cmd() {
   fzf-tmux --delimiter=":" \
