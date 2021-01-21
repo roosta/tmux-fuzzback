@@ -111,26 +111,28 @@ main() {
     correction="0"
     column=$(fuzzback::query_column "$query" "$trimmed_line")
 
-    # Jump vertically
+    # To go line
     # -----------------
     if [ "$line_number" -gt "$max_jump" ]; then
-      # We need to 'reach' a line number that is not accessible via 'jump'.
-      # Introducing 'correction'
+      # We need to reach a line number that is not accessible via goto-line.
+      # So we need to correct position to reach the desired line number
       correct_line_number="$max_jump"
       correction=$((line_number - correct_line_number))
     else
-      # we can reach the desired line number via 'jump'. Correction not needed.
+      # we can reach the desired line number via goto-line. Correction not
+      # needed.
       correct_line_number="$line_number"
     fi
 
     tmux copy-mode
     fuzzback::goto_line "$correct_line_number"
 
+    # Correct if needed
     if [ "$correction" -gt "0" ]; then
       fuzzback::cursor_up "$correction"
     fi
 
-    # Padding
+    # Centering
     # -------------
     # If no corrections (meaning result is not at the top of scrollback)
     # we can then 'center' the result within a pane.
@@ -140,7 +142,7 @@ main() {
       fuzzback::center "$line_number" "$half_window_height"
     fi
 
-    # Jump horizontally
+    # Move to column
     # ------------------
     if [ "$column" -gt "0" ]; then
       tmux send-keys -X -N "$column" cursor-right
