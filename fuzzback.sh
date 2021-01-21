@@ -53,12 +53,9 @@ fuzzback::get_max_jump() {
   echo "$max_jump"
 }
 
-# performs a jump to go to line
-# https://github.com/tmux-plugins/tmux-copycat/blob/e95528ebaeb6300d8620c8748a686b786056f374/scripts/copycat_jump.sh#L150
+# Goto line
 fuzzback::goto() {
   local line_number="$1"
-  # tmux send-keys -X history-bottom
-  tmux send-keys -X start-of-line
   tmux send-keys -X goto-line "$line_number"
 }
 
