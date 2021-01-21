@@ -60,8 +60,9 @@ fuzzback::goto() {
   tmux send-keys -X goto-line "$line_number"
 }
 
+# Center text on screen
 # https://github.com/tmux-plugins/tmux-copycat/blob/e95528ebaeb6300d8620c8748a686b786056f374/scripts/copycat_jump.sh#L127
-fuzzback::create_padding_below_result() {
+fuzzback::center() {
   local number_of_lines="$1"
   local maximum_padding="$2"
   local padding
@@ -136,13 +137,13 @@ main() {
     if [ "$correction" -eq "0" ]; then
       local half_window_height="$((window_height / 2))"
       # creating as much padding as possible, up to half pane height
-      fuzzback::create_padding_below_result "$line_number" "$half_window_height"
+      fuzzback::center "$line_number" "$half_window_height"
     fi
 
     # Jump horizontally
     # ------------------
-    if [ "$query_line_position" -gt "0" ]; then
-      tmux send-keys -X -N "$query_line_position" cursor-right
+    if [ "$column" -gt "0" ]; then
+      tmux send-keys -X -N "$column" cursor-right
     fi
 
   fi
