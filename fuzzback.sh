@@ -13,10 +13,10 @@ fuzzback::fzf_cmd() {
 }
 
 fuzzback::search_cmd() {
-  if hash ag 2>/dev/null; then
-    ag --column "$@"
-  elif hash rg 2>/dev/null; then
+  if hash rg 2>/dev/null; then
     rg -N --column "$@"
+  elif hash ag 2>/dev/null; then
+    ag --column "$@"
   fi
 }
 
