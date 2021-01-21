@@ -26,7 +26,6 @@ fuzzback::cursor_up() {
   local line_number
   line_number="$1"
   tmux send-keys -X -N "$line_number" cursor-up
-  tmux send-keys -X start-of-line
 }
 
 # Get columns position of search query
@@ -145,6 +144,7 @@ main() {
     # Move to column
     # ------------------
     if [ "$column" -gt "0" ]; then
+      tmux send-keys -X start-of-line
       tmux send-keys -X -N "$column" cursor-right
     fi
 
