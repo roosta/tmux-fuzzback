@@ -20,8 +20,8 @@ fuzzback::search_cmd() {
   fi
 }
 
-# "manually" go up in the scrollback for a number of lines
-# https://github.com/tmux-plugins/tmux-copycat/blob/e95528ebaeb6300d8620c8748a686b786056f374/scripts/copycat_jump.sh#L121
+# Move cursor up in scrollback buffer, used when goto fails and we have to
+# correct
 fuzzback::cursor_up() {
   local line_number
   line_number="$1"
@@ -53,7 +53,7 @@ fuzzback::get_max_jump() {
   echo "$max_jump"
 }
 
-# Goto line
+# Goto line in scrollback buffer
 fuzzback::goto() {
   local line_number="$1"
   tmux send-keys -X goto-line "$line_number"
