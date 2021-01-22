@@ -61,7 +61,7 @@ fuzzback::query_column() {
   echo "$zero_index"
 }
 
-# maximum line number that can be reached via tmux 'jump'
+# maximum line number that can be reached via tmux goto-line
 # https://github.com/tmux-plugins/tmux-copycat/blob/e95528ebaeb6300d8620c8748a686b786056f374/scripts/copycat_jump.sh#L159
 fuzzback::get_max_jump() {
   local max_jump max_lines window_height
