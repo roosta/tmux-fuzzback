@@ -12,4 +12,4 @@ tmux_get() {
 
 key="$(tmux_get '@fuzzback-bind' '?')"
 
-tmux bind-key "$key" run -b "$CURRENT_DIR/fuzzback.sh";
+tmux bind-key "$key" run -b "$CURRENT_DIR/scripts/fuzzback.sh";

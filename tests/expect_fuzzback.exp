@@ -1,0 +1,217 @@
+#!/usr/bin/env expect
+
+# Init: {{{
+
+# Setup expect
+set exit_status 0
+log_user 0
+set timeout 5
+
+# Setup tmux
+spawn tmux
+sleep 1
+
+# }}}
+# Helpers {{{
+proc sync_tmux {} {
+  sleep 1.5
+}
+
+proc exit_status_false {} {
+  global exit_status
+  set exit_status 1
+}
+
+proc kill_tmux_server {} {
+  send ""
+  sync_tmux
+  send "tmux kill-server\r"
+  sync_tmux
+}
+
+proc teardown_and_exit {} {
+  global exit_status
+  kill_tmux_server
+  exit $exit_status
+}
+
+proc generate_checker {} {
+  set random [ expr { rand()*10000 } ]
+  set checker "$random"
+  return $checker
+}
+
+proc display_cursor_pos {checker} {
+  send ":"
+  sleep 0.5
+  send "display-message '$checker: #{copy_cursor_x}, #{copy_cursor_y}'\r"
+  sleep 0.5
+}
+
+proc display_cursor_word {checker} {
+  send ":"
+  sleep 0.5
+  send "display-message '$checker: #{copy_cursor_word}'\r"
+  sleep 0.5
+}
+
+proc display_pane_mode {checker} {
+  send ":"
+  sleep 0.5
+  send "display-message '$checker: #{pane_mode}'\r"
+  sleep 0.5
+}
+
+proc display_scroll_position {checker} {
+  send ":"
+  sleep 0.5
+  send "display-message '$checker: #{scroll_position}'\r"
+  sleep 0.5
+}
+
+proc display_top_pos {checker} {
+  send "g"
+  sleep 0.5
+  send ":"
+  sleep 0.5
+  send "display-message '$checker: #{scroll_position}'\r"
+  sleep 0.5
+}
+
+proc display_text {text} {
+  send "echo $text\r"
+  sync_tmux
+}
+
+proc tmux_new_window {} {
+  sleep 0.3
+  send "c"
+  sync_tmux
+  send "\""
+  sync_tmux
+  send ":"
+  sleep 0.5
+  send "resize-pane -y 31\r"
+  sync_tmux
+}
+
+# Use fuzzback to search for $text
+proc fuzz {text} {
+  send "?"
+  sleep 0.5
+  send "$text"
+  sleep 0.5
+  send "\r"
+  sleep 0.7
+}
+
+proc create_output {n} {
+  for {set times 0} {$times < $n} {incr times} {
+    send "echo output\r"
+    sleep 0.1
+  }
+  sync_tmux
+}
+
+# }}}
+# Assertions: {{{
+
+proc assert_cursor_pos {x y message} {
+  set checker [ generate_checker ]
+  display_cursor_pos "$checker"
+  expect {
+    "$checker: $x, $y" { puts "  Success: $message" }
+    timeout { puts "  Fail: $message"; exit_status_false }
+  }
+}
+
+proc assert_cursor_word {word message} {
+  set checker [ generate_checker ]
+  display_cursor_word "$checker"
+  expect {
+    "$checker: $word" { puts "  Success: $message" }
+    timeout { puts "  Fail: $message"; exit_status_false }
+  }
+}
+
+proc assert_mode {message} {
+  set checker [ generate_checker ]
+  display_pane_mode "$checker"
+  expect {
+    "$checker: copy-mode" { puts "  Success: $message" }
+    timeout { puts "  Fail: $message"; exit_status_false }
+  }
+}
+
+proc assert_scroll_position {pos message} {
+  set checker [ generate_checker ]
+  display_scroll_position "$checker"
+  expect {
+    "$checker: $pos" { puts "  Success: $message" }
+    timeout { puts "  Fail: $message"; exit_status_false }
+  }
+}
+
+proc assert_top_pos {pos message} {
+  set checker [ generate_checker ]
+  display_top_pos "$checker"
+  expect {
+    "$checker: $pos" { puts "  Success: $message" }
+    timeout { puts "  Fail: $message"; exit_status_false }
+  }
+}
+
+# }}}
+# Tests: {{{
+
+puts "\nTest simple query, no scrollback"
+puts "--------------------------------"
+display_text "some text move here 1"
+fuzz "move here 1"
+assert_mode "Ensure we entered copy-mode"
+assert_cursor_pos "10" "1" "Check that we are at the top of pane, and that cursor has moved to query word"
+assert_cursor_word "move" "Check that word under cursor is \"move\""
+assert_scroll_position "0" "Ensure scroll position is 0, indicating no scrollback buffer"
+
+puts "\nTest complex query with no scrollback"
+puts "-------------------------------------"
+tmux_new_window
+display_text "file 1 song.og"
+display_text "file 2 song.mp3"
+fuzz "^file .mp3$"
+assert_mode "Ensure we entered copy-mode"
+assert_cursor_pos "0" "3" "Ensure cursor x is 0 and that we are at the top of visible pane"
+assert_cursor_word "file" "Check that word under cursor is \"file\""
+assert_scroll_position "0" "Ensure scroll position is 0, indicating no scrollback buffer"
+
+puts "\nTest finding a match at the top of a scrollback buffer"
+puts "------------------------------------------------------"
+tmux_new_window
+display_text "find me atop scrollback"
+create_output 20
+fuzz "atop scrollback"
+assert_mode "Check that we have entered copy mode"
+assert_cursor_pos "8" "1" "Check that we are at the top of visible pane, and the the cursor x has moved to query word"
+assert_scroll_position "12" "Check that we are at the top of scrollback"
+assert_cursor_word "atop" "Check word under cursor is \"atop\""
+
+puts "\nTest finding a match in the middle of scrollback, ensure that padding works as expected"
+puts "---------------------------------------------------------------------------------------"
+tmux_new_window
+create_output 20
+display_text "Find me in the middle"
+create_output 20
+fuzz "Find me"
+assert_mode "Check that we have entered copy mode"
+assert_cursor_pos "0" "15" "Check that we are in the middle of the visible area"
+assert_cursor_word "Find" "Check word under cursor is Find"
+assert_scroll_position "26" "Check scroll position of match"
+assert_top_pos "52" "Check that top scroll position is larger than match position"
+
+# }}}
+
+# quit
+
+teardown_and_exit
+
+#  vim: set ts=2 sw=2 tw=0 fdm=marker et :
