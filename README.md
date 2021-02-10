@@ -3,7 +3,7 @@
 tmux-fuzzback uses [fzf](https://github.com/junegunn/fzf) to search terminal
 scrollback buffer, and jump to selected position.
 
-<!-- ![](preview.gif) -->
+![](https://raw.githubusercontent.com/roosta/assets/master/tmux-fuzzback/preview.gif)
 
 ## Attribution
 
