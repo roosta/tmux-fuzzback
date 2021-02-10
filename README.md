@@ -14,7 +14,8 @@ it, and give it some love. I also drew more than a little inspiration from
 
 ## Requirements
 
-[tmux](https://github.com/tmux/tmux), and [fzf](https://github.com/junegunn/fzf) is required.
+- [tmux](https://github.com/tmux/tmux)
+- [fzf](https://github.com/junegunn/fzf)
 
 ## Installation
 
@@ -54,7 +55,7 @@ setting value to `@fzf-search-bind` in the tmux config like this:
 set -g @fuzzback-bind 's'
 ```
 
-## Troubleshooting
+## Limitations
 
 ### Column movement
 
