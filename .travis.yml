@@ -1,21 +1,23 @@
 dist: xenial
 
-# generic packages and tmux
 before_install:
-  - sudo apt-get update
-  - sudo apt-get install -y git-core expect
+  - sudo apt-get install -y git-core expect vim
   - sudo apt-get install -y python-software-properties software-properties-common
-  - sudo apt-get install -y libevent-dev libncurses-dev
-  - git clone https://github.com/tmux/tmux.git
-  - cd tmux
-  - git checkout 2.5
+  - sudo apt-get install -y build-essential libtool autotools-dev autoconf
+  - sudo apt-get install -y pkg-config bison
+  - sudo apt-get install -y wget tar libevent-dev libncurses-dev
+  - git clone https://github.com/tmux/tmux.git ~/tmux_source
+  - cd ~/tmux_source
   - sh autogen.sh
   - ./configure && make && sudo make install
+  - cd $TRAVIS_BUILD_DIR
 
-install:
-  - git fetch --unshallow --recurse-submodules || git fetch --recurse-submodules
-  # manual `git clone` required for testing `tmux-test` plugin itself
-  - git clone https://github.com/tmux-plugins/tmux-test lib/tmux-test; true
-  - lib/tmux-test/setup
+addons:
+  apt:
+    update: true
+
+before_script:
+  - git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+  - ~/.fzf/install --all
 
 script: ./tests/run_tests_in_isolation
