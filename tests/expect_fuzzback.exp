@@ -83,16 +83,18 @@ proc display_text {text} {
   sync_tmux
 }
 
+proc tmux_resize_window {} {
+  send ":"
+  sleep 0.5
+  send "resize-window -y 31 -x 80\r"
+  sync_tmux
+}
+
 proc tmux_new_window {} {
   sleep 0.3
   send "c"
   sync_tmux
-  send "\""
-  sync_tmux
-  send ":"
-  sleep 0.5
-  send "resize-pane -y 31\r"
-  sync_tmux
+  tmux_resize_window
 }
 
 # Use fuzzback to search for $text
@@ -166,6 +168,7 @@ proc assert_top_pos {pos message} {
 
 puts "\nTest simple query, no scrollback"
 puts "--------------------------------"
+tmux_new_window
 display_text "some text move here 1"
 fuzz "move here 1"
 assert_mode "Ensure we entered copy-mode"
