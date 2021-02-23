@@ -1,5 +1,8 @@
 # tmux-fuzzback
 
+[![Build Status](https://travis-ci.com/roosta/tmux-fuzzback.svg?branch=master)](https://travis-ci.com/roosta/tmux-fuzzback)
+[![GitHub](https://img.shields.io/badge/License-MIT-%232C78BF)](https://github.com/roosta/tmux-fuzzback/blob/master/LICENSE)
+
 tmux-fuzzback uses [fzf](https://github.com/junegunn/fzf) to search terminal
 scrollback buffer, and jump to selected position.
 
