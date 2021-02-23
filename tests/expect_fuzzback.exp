@@ -86,7 +86,7 @@ proc display_text {text} {
 proc tmux_resize_window {} {
   send ":"
   sleep 0.5
-  send "resize-window -y 31 -x 80\r"
+  send "resize-window -y 31 -x 120\r"
   sync_tmux
 }
 
