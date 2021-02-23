@@ -6,7 +6,7 @@
 tmux-fuzzback uses [fzf](https://github.com/junegunn/fzf) to search terminal
 scrollback buffer, and jump to selected position.
 
-![](https://raw.githubusercontent.com/roosta/assets/master/tmux-fuzzback/preview.gif)
+![preview](https://raw.githubusercontent.com/roosta/assets/master/tmux-fuzzback/preview.gif)
 
 ## Attribution
 
@@ -52,7 +52,7 @@ fzf.
 ## Options
 
 The default key-binding is `?` preceded by a prefix, it can be modified by
-setting value to `@fzf-search-bind` in the tmux config like this:
+setting value to `@fuzzback-bind` in the tmux config like this:
 
 ``` tmux
 set -g @fuzzback-bind 's'
@@ -62,14 +62,9 @@ set -g @fuzzback-bind 's'
 
 ### Column movement
 
-Moving to column is not working optimally. Fzf doesn't have a way to output the
-pattern highlighted text, so instead I use `query` to try and search for column
-to jump to using `awk`. This is less than ideal but it is what it is for the
-moment. When fuzzback fails to get a column number it simply puts you at the
-start of the line.
-
-An example of this would be to search to items that ends with  `world$`,
-fuzzback will try to find the entire query and will fail.
+Depending on the complexity of the search query, fuzzback might not know what
+column to move to, and will place you at the start of the line unless a literal
+match can be found.
 
 ## License
 
