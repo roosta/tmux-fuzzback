@@ -66,6 +66,15 @@ Depending on the complexity of the search query, fuzzback might not know what
 column to move to, and will place you at the start of the line unless a literal
 match can be found.
 
+## Developing
+
+You can run tests locally using [Vagrant](https://www.vagrantup.com/) by calling:
+
+```sh
+# cd project root
+./run_tests
+```
+
 ## License
 
 [MIT](https://github.com/roosta/tmux-fuzzback/blob/master/LICENSE)
