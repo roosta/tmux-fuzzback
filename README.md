@@ -17,7 +17,7 @@ it, and give it some love. I also drew more than a little inspiration from
 
 ## Requirements
 
-- [tmux](https://github.com/tmux/tmux)
+- [tmux](https://github.com/tmux/tmux) version >= [2.4](https://github.com/tmux/tmux/releases/tag/2.4)
 - [fzf](https://github.com/junegunn/fzf)
 
 ## Installation
