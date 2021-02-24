@@ -8,8 +8,18 @@ IFS=$'\n\t'
 
 # Pull in helpers
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-# shellcheck source=helpers.sh
-. "$CURRENT_DIR/helpers.sh"
+SUPPORTED_VERSION="1.9"
+
+# https://github.com/tmux-plugins/tmux-copycat/blob/d7f7e6c1de0bc0d6915f4beea5be6a8a42045c09/scripts/helpers.sh#L12
+fuzzback::cmd_exists() {
+  command -v "$@" > /dev/null 2>&1
+}
+
+# Fall back to awk if gawk isn't present on system
+AWK_CMD='awk'
+if fuzzback::cmd_exists gawk; then
+  AWK_CMD='gawk'
+fi
 
 fuzzback::fzf_cmd() {
   fzf-tmux --delimiter=":" \
@@ -112,7 +122,7 @@ fuzzback::get_line_number() {
   echo "$line_number"
 }
 
-main() {
+fuzzback() {
 
   local content match line_number window_height query max_lines max_jump
   local correction correct_line_number trimmed_line column
@@ -172,6 +182,16 @@ main() {
       tmux send-keys -X -N "$column" cursor-right
     fi
 
+  fi
+}
+
+fuzzback::version_ok() {
+  "$CURRENT_DIR/check_tmux_version.sh" "$SUPPORTED_VERSION"
+}
+
+main() {
+  if fuzzback::version_ok; then
+    fuzzback
   fi
 }
 
