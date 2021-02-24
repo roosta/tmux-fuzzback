@@ -107,7 +107,7 @@ fuzzback::center() {
 
 fuzzback::get_line_number() {
   local position line_number
-  position=$(echo "$1" | cut -d':' -f1 | tr -d '[:space:]')
+  position=$(echo "$1" | cut -d':' -f1 | xargs)
   line_number=$((position - 1))
   echo "$line_number"
 }
@@ -121,9 +121,9 @@ main() {
   match=$(echo "$content" | tac | nl -b 'a' -s ':' | fuzzback::fzf_cmd)
 
   if [ -n "$match" ]; then
-
-    query=$(echo "$match" | cut -d$'\n' -f1)
-    rest=$(echo "$match" | cut -d$'\n' -f2)
+    readarray -t match <<< "$match"
+    query="${match[0]}"
+    rest="${match[1]}"
     trimmed_line=$(echo "$rest" | sed 's/[[:space:]]\+[[:digit:]]\+://')
     line_number=$(fuzzback::get_line_number "$rest")
     window_height="$(tmux display-message -p '#{pane_height}')"
