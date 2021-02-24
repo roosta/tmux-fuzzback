@@ -8,7 +8,7 @@ IFS=$'\n\t'
 
 # Pull in helpers
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-SUPPORTED_VERSION="2.3"
+SUPPORTED_VERSION="2.4"
 
 # https://github.com/tmux-plugins/tmux-copycat/blob/d7f7e6c1de0bc0d6915f4beea5be6a8a42045c09/scripts/helpers.sh#L12
 fuzzback::cmd_exists() {
