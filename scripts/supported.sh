@@ -63,7 +63,7 @@ fuzzback::unsupported_msg() {
   if [ -n "$UNSUPPORTED_MSG" ]; then
     echo "$UNSUPPORTED_MSG"
   else
-    echo "Error, Tmux version unsupported! Please install Tmux version $VERSION or greater!"
+    echo "fuzzback error: tmux version unsupported, please install version $VERSION or greater!"
   fi
 }
 
