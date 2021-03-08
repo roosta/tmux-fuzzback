@@ -251,7 +251,7 @@ fuzzback() {
     max_lines=$(wc -l < "$head_file")
     max_jump=$(get_max_jump "$max_lines" "$window_height")
 
-    # Quit copymode before starting a new fuzzback session This solves issues
+    # Quit copy-mode before starting a new fuzzback session. This solves issues
     # with starting fuzzback when already in copy-mode
     tmux copy-mode -q
 
