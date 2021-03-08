@@ -183,7 +183,7 @@ create_capture_file() {
 	capture_filename="$(get_capture_filename)"
 	mkdir -p "$(get_tmp_dir)"
 	chmod 0700 "$(get_tmp_dir)"
-  tmux capture-pane -p -S - > "$capture_filename"
+  tmux capture-pane -e -p -S - > "$capture_filename"
 }
 
 # Create a file that is the head of the scrollback. Ends where the cursor y
