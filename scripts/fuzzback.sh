@@ -70,10 +70,10 @@ query_column() {
 # maximum line number that can be reached via tmux goto-line
 # https://github.com/tmux-plugins/tmux-copycat/blob/e95528ebaeb6300d8620c8748a686b786056f374/scripts/copycat_jump.sh#L159
 get_max_jump() {
-  local max_jump max_lines window_height
+  local max_jump max_lines pane_height
   local max_lines="$1"
-  local window_height="$2"
-  max_jump=$((max_lines - window_height))
+  local pane_height="$2"
+  max_jump=$((max_lines - pane_height))
   # max jump can't be lower than zero
   if [ "$max_jump" -lt "0" ]; then
     max_jump="0"
@@ -113,9 +113,9 @@ goto_line() {
     # If no corrections (meaning result is not at the top of scrollback)
     # we can then 'center' the result within a pane.
     if [ "$correction" -eq "0" ]; then
-      local half_window_height="$((window_height / 2))"
+      local half_pane_height="$((pane_height / 2))"
       # creating as much padding as possible, up to half pane height
-      center "$line_number" "$half_window_height"
+      center "$line_number" "$half_pane_height"
     fi
   else
     tmux send-keys -X goto-line "0"
@@ -214,15 +214,15 @@ create_tail_file() {
 }
 
 fuzzback() {
-  local match line_number window_height query max_lines max_jump
+  local match line_number pane_height query max_lines max_jump
   local correct_line_number trimmed_line column pos pos_rev
   local capture_height head_n tail_n
 
   create_capture_file
 
   pos=$(get_pos)
-  window_height="$(tmux display-message -p '#{pane_height}')"
-  pos_rev=$(( window_height - pos ))
+  pane_height="$(tmux display-message -p '#{pane_height}')"
+  pos_rev=$(( pane_height - pos ))
   capture_file=$(get_capture_filename)
   head_file=$(get_head_filename)
   tail_file=$(get_tail_filename)
@@ -249,7 +249,7 @@ fuzzback() {
     column=$(query_column "$query" "$trimmed_line")
 
     max_lines=$(wc -l < "$head_file")
-    max_jump=$(get_max_jump "$max_lines" "$window_height")
+    max_jump=$(get_max_jump "$max_lines" "$pane_height")
 
     # Quit copy-mode before starting a new fuzzback session. This solves issues
     # with starting fuzzback when already in copy-mode
