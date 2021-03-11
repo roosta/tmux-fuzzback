@@ -21,6 +21,10 @@ get_tmp_dir() {
   echo "${TMPDIR:-/tmp}/tmux-$EUID-fuzzback"
 }
 
+get_tmp_filename() {
+  echo "$(get_tmp_dir)/tmp-$(_pane_unique_id)"
+}
+
 get_capture_filename() {
   echo "$(get_tmp_dir)/capture-$(_pane_unique_id)"
 }

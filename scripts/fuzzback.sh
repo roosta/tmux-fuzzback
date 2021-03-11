@@ -203,14 +203,21 @@ create_head_file() {
 # Create a file that is the content below cursor then starting fuzzback
 create_tail_file() {
   local tail_n="$1"
-  local tail_filename capture_filename
+  local tail_filename capture_filename trimmed
   tail_filename="$(get_tail_filename)"
 	capture_filename="$(get_capture_filename)"
-  tail -n "$tail_n" < "$capture_filename" \
-    | nl -b 'a' -s ':' \
-    | tac \
-    | sed 's/^/-1:/' \
-    > "$tail_filename"
+  tmp_filename="$(get_tmp_filename)"
+  tail -n "$tail_n" < "$capture_filename" > "$tmp_filename"
+  trimmed=$(cat "$tmp_filename")
+  if [ -z "$trimmed" ]; then
+    echo "$trimmed" > "$tail_filename"
+  else
+    nl -b 'a' -s ':' < "$tmp_filename" \
+      | tac \
+      | sed 's/^/-1:/' \
+      > "$tail_filename"
+  fi
+  rm -f "$tmp_filename"
 }
 
 fuzzback() {
