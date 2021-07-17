@@ -197,6 +197,7 @@ create_head_file() {
     | tac \
     | nl -b 'a' -s ':' \
     | sed 's/^/1:/' \
+    | sed 's/$/[m/' \
     > "$head_filename"
 }
 
@@ -215,6 +216,7 @@ create_tail_file() {
     nl -b 'a' -s ':' < "$tmp_filename" \
       | tac \
       | sed 's/^/-1:/' \
+      | sed 's/$/[m/' \
       > "$tail_filename"
   fi
   rm -f "$tmp_filename"
