@@ -6,10 +6,10 @@
 set -uo pipefail
 IFS=$'\n\t'
 
-# Pull in helpers
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 SUPPORTED_VERSION="2.4"
 
+# Pull in helpers
 # shellcheck source=helpers.sh
 . "$CURRENT_DIR/helpers.sh"
 
