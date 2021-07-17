@@ -15,6 +15,7 @@ SUPPORTED_VERSION="2.4"
 
 fzf_cmd() {
   fzf-tmux --delimiter=":" \
+           -d "70%" \
            --ansi \
            --with-nth="3.." \
            --no-multi \
