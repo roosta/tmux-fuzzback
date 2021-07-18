@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# This file is a symlink from 'tmux-test' plugin.
-# You probably don't want to edit it.
+# This file is a copied from 'tmux-test' plugin.
+# https://github.com/tmux-plugins/tmux-test/blob/master/run_tests
 
 # Run this script when running a test suite.
 

@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # This file is copied from 'tmux-test' plugin.
+# https://github.com/tmux-plugins/tmux-test/blob/master/tests/run_tests_in_isolation
 
 # This script should be run within an isolated enviroment (Vagrant, travis).
 # Depending on what the tests do, it might NOT be safe to run this script

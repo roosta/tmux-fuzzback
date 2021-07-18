@@ -1,6 +1,5 @@
 # This file is copied from
-# https://github.com/tmux-plugins/tmux-test
-
+# https://github.com/tmux-plugins/tmux-test/blob/master/tests/helpers/helpers.sh
 
 # Global variable that keeps the value of test status (success/fail).
 # Suggested usage is via `fail_helper` and `exit_helper` functions.
