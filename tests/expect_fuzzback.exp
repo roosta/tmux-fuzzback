@@ -116,7 +116,7 @@ proc create_output {n} {
 }
 
 proc open_vim {n} {
-  send "vim -u NONE -c 'set noswapfile' /vagrant/run_tests +$n\r"
+  send "vim -u NONE -c 'set noswapfile' /vagrant/tests/fixtures/input.txt +$n\r"
   sleep 1
 }
 
@@ -216,13 +216,19 @@ assert_cursor_word "Find" "Check word under cursor is Find"
 assert_scroll_position "26" "Check scroll position of match"
 assert_top_pos "52" "Check that top scroll position is larger than match position"
 
-puts "\nTest moving down in vim"
-puts "---------------------------------------------------------------------------------------"
+puts "\nTest moving up and down in vim"
+puts "--------------------------------"
 tmux_new_window
 open_vim 0
-fuzz "parse_arguments"
+fuzz "daniel"
 assert_mode "Check that we have entered copy mode"
-assert_cursor_pos "0" "26" "Checked that we moved down in vim"
+assert_cursor_pos "0" "10" "Checked that we moved down in vim"
+send "q"
+sleep 0.1
+send "G"
+sleep 0.1
+fuzz "daniel"
+assert_cursor_pos "0" "10" "Checked that we moved up in vim"
 # assert_cursor_word "Find" "Check word under cursor is Find"
 # assert_scroll_position "26" "Check scroll position of match"
 # assert_top_pos "52" "Check that top scroll position is larger than match position"
