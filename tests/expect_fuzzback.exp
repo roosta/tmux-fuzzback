@@ -115,6 +115,11 @@ proc create_output {n} {
   sync_tmux
 }
 
+proc open_vim {n} {
+  send "vim -u NONE -c 'set noswapfile' /vagrant/run_tests +$n\r"
+  sleep 1
+}
+
 # }}}
 # Assertions: {{{
 
@@ -210,6 +215,17 @@ assert_cursor_pos "0" "15" "Check that we are in the middle of the visible area"
 assert_cursor_word "Find" "Check word under cursor is Find"
 assert_scroll_position "26" "Check scroll position of match"
 assert_top_pos "52" "Check that top scroll position is larger than match position"
+
+puts "\nTest moving down in vim"
+puts "---------------------------------------------------------------------------------------"
+tmux_new_window
+open_vim 0
+fuzz "parse_arguments"
+assert_mode "Check that we have entered copy mode"
+assert_cursor_pos "0" "26" "Checked that we moved down in vim"
+# assert_cursor_word "Find" "Check word under cursor is Find"
+# assert_scroll_position "26" "Check scroll position of match"
+# assert_top_pos "52" "Check that top scroll position is larger than match position"
 
 # }}}
 
