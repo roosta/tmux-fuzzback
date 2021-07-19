@@ -229,9 +229,16 @@ send "G"
 sleep 0.1
 fuzz "daniel"
 assert_cursor_pos "0" "10" "Checked that we moved up in vim"
-# assert_cursor_word "Find" "Check word under cursor is Find"
-# assert_scroll_position "26" "Check scroll position of match"
-# assert_top_pos "52" "Check that top scroll position is larger than match position"
+
+puts "\nTest moving above vim window"
+puts "----------------------------"
+tmux_new_window
+display_text "daniel"
+create_output 32
+open_vim 0
+fuzz "daniel"
+assert_cursor_word "daniel" "Check that we've moved above vim, and cursor is on search term"
+assert_cursor_pos 0 10 "Check scroll position of match"
 
 # }}}
 
