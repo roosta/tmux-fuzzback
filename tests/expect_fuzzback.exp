@@ -222,13 +222,15 @@ tmux_new_window
 open_vim 0
 fuzz "daniel"
 assert_mode "Check that we have entered copy mode"
-assert_cursor_pos "0" "10" "Checked that we moved down in vim"
+assert_cursor_pos "0" "10" "Check that we moved down in vim"
+assert_cursor_word "daniel" "Check that word under cursor match search term"
 send "q"
 sleep 0.1
 send "G"
 sleep 0.1
 fuzz "daniel"
 assert_cursor_pos "0" "10" "Checked that we moved up in vim"
+assert_cursor_word "daniel" "Check that word under cursor match search term"
 
 puts "\nTest moving above vim window"
 puts "----------------------------"
