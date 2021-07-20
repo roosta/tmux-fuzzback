@@ -91,7 +91,6 @@ proc tmux_resize_window {} {
 }
 
 proc tmux_new_window {} {
-  sleep 0.3
   send "c"
   sync_tmux
   tmux_resize_window
@@ -116,7 +115,7 @@ proc create_output {n} {
 }
 
 proc open_vim {n} {
-  send "vim -u NONE -c 'set noswapfile' /vagrant/tests/fixtures/input.txt +$n\r"
+  send "vim -u NONE -c 'set noswapfile' tests/fixtures/input.txt +$n\r"
   sleep 1
 }
 
