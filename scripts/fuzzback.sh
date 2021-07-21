@@ -14,14 +14,14 @@ SUPPORTED_VERSION="2.4"
 . "$CURRENT_DIR/helpers.sh"
 
 fzf_cmd() {
-  fzf-tmux --delimiter=":" \
-           -d "70%" \
-           --ansi \
-           --with-nth="3.." \
-           --no-multi \
-           --no-sort \
-           --no-preview \
-           --print-query
+  fzf-tmux -d "70%" \
+    --delimiter=":" \
+    --ansi \
+    --with-nth="3.." \
+    --no-multi \
+    --no-sort \
+    --no-preview \
+    --print-query
 }
 
 cursor_up() {
