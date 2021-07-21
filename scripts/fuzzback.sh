@@ -88,6 +88,7 @@ goto_line() {
   local line_number="$1"
   local direction="$2"
   local max_jump="$3"
+  local max_lines="$4"
   correction="0"
 
   if [ "$direction" -eq "1" ];then
@@ -106,7 +107,9 @@ goto_line() {
 
     # Correct if needed
     if [ "$correction" -gt "0" ]; then
-      cursor_up "$correction"
+      local scroll_top="$(( max_lines - line_number - 1 ))"
+      cursor_up "$max_lines"
+      cursor_down "$scroll_top"
     fi
 
     # Centering
@@ -268,7 +271,7 @@ fuzzback() {
     tmux copy-mode
 
     # Move to position
-    goto_line "$line_number" "$direction" "$max_jump"
+    goto_line "$line_number" "$direction" "$max_jump" "$max_lines"
     goto_column "$column"
 
   fi
