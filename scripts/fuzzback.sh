@@ -198,7 +198,7 @@ create_head_file() {
     | tac \
     | nl -b 'a' -s ':' \
     | sed 's/^/1:/' \
-    | sed 's/$/[m/' \
+    | sed '1s/$/[m/' \
     > "$head_filename"
 }
 
