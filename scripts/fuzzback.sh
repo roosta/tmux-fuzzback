@@ -267,9 +267,8 @@ fuzzback() {
   fi
 
   if [ "$(echo "$match" | wc -l)" -gt "1" ]; then
-    readarray -t match <<< "$match"
-    query="${match[0]}"
-    rest="${match[1]}"
+    query="$(head -n 1 <<< "$match")"
+    rest="$(tail -n 1 <<< "$match")"
     trimmed_line=$(echo "$rest" | sed 's/-\?[[:digit:]]\+:[[:space:]]\+[[:digit:]]\+://')
     line_number=$(get_line_number "$rest")
     direction=$(get_direction "$rest")
