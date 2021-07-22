@@ -13,23 +13,27 @@ SUPPORTED_VERSION="2.4"
 # shellcheck source=helpers.sh
 . "$CURRENT_DIR/helpers.sh"
 
-FUZZBACK_FZF_OPTS="
-$FZF_DEFAULT_OPTS
---delimiter=':'
---ansi
---with-nth='3..'
---no-multi
---no-sort
---no-preview
---print-query
-"
-
 fzf_split_cmd() {
-  FZF_DEFAULT_OPTS="$FUZZBACK_FZF_OPTS" fzf-tmux -d "70%"
+  fzf-tmux -d "70%" \
+    --delimiter=":" \
+    --ansi \
+    --with-nth="3.." \
+    --no-multi \
+    --no-sort \
+    --no-preview \
+    --print-query
+
 }
 
 fzf_popup_cmd() {
-  FZF_DEFAULT_OPTS="$FUZZBACK_FZF_OPTS" fzf-tmux -p
+  fzf-tmux -p \
+    --delimiter=":" \
+    --ansi \
+    --with-nth="3.." \
+    --no-multi \
+    --no-sort \
+    --no-preview \
+    --print-query
 }
 
 cursor_up() {
