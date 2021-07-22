@@ -51,11 +51,22 @@ fzf.
 
 ## Options
 
+### Key binding
+
 The default key-binding is `?` preceded by a prefix, it can be modified by
 setting value to `@fuzzback-bind` in the tmux config like this:
 
-``` tmux
+```tmux
 set -g @fuzzback-bind 's'
+```
+
+### Enable popup
+
+You can enable tmux popup by setting this variable in your tmux conf.  Keep in
+mind that only recent versions `3.2` and above of tmux support this.
+
+```tmux
+set -g @fuzzback-popup 1
 ```
 
 ## Limitations

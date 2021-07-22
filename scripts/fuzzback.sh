@@ -13,15 +13,23 @@ SUPPORTED_VERSION="2.4"
 # shellcheck source=helpers.sh
 . "$CURRENT_DIR/helpers.sh"
 
-fzf_cmd() {
-  fzf-tmux -d "70%" \
-    --delimiter=":" \
-    --ansi \
-    --with-nth="3.." \
-    --no-multi \
-    --no-sort \
-    --no-preview \
-    --print-query
+FUZZBACK_FZF_OPTS="
+$FZF_DEFAULT_OPTS
+--delimiter=':'
+--ansi
+--with-nth='3..'
+--no-multi
+--no-sort
+--no-preview
+--print-query
+"
+
+fzf_split_cmd() {
+  FZF_DEFAULT_OPTS="$FUZZBACK_FZF_OPTS" fzf-tmux -d "70%"
+}
+
+fzf_popup_cmd() {
+  FZF_DEFAULT_OPTS="$FUZZBACK_FZF_OPTS" fzf-tmux -p
 }
 
 cursor_up() {
@@ -230,9 +238,11 @@ fuzzback() {
   local match line_number pane_height query max_lines max_jump
   local correct_line_number trimmed_line column pos pos_rev
   local capture_height head_n tail_n
+  local enable_popup
 
   create_capture_file
 
+  enable_popup="$(tmux_get '@fuzzback-popup' 0)"
   pos=$(get_pos)
   pane_height="$(tmux display-message -p '#{pane_height}')"
   pos_rev=$(( pane_height - pos ))
@@ -250,7 +260,11 @@ fuzzback() {
   create_tail_file "$tail_n"
 
   # Combine head and tail when searching with fzf
-  match=$(cat "$tail_file" "$head_file" | fzf_cmd)
+  if [ "$enable_popup" -eq 1 ];then
+    match=$(cat "$tail_file" "$head_file" | fzf_popup_cmd)
+  else
+    match=$(cat "$tail_file" "$head_file" | fzf_split_cmd)
+  fi
 
   if [ "$(echo "$match" | wc -l)" -gt "1" ]; then
     readarray -t match <<< "$match"
