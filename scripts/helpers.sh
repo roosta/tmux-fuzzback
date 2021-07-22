@@ -45,3 +45,12 @@ delete_old_files() {
   t="$(get_tail_filename)"
   rm -f "$c" "$h" "$t"
 }
+
+# $1: option
+# $2: default value
+# Source: https://github.com/wfxr/tmux-fzf-url/blob/b8436ddcab9bc42cd110e0d0493a21fe6ed1537e/fzf-url.tmux#L11
+tmux_get() {
+    local value
+    value="$(tmux show -gqv "$1")"
+    [ -n "$value" ] && echo "$value" || echo "$2"
+}
