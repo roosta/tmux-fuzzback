@@ -69,6 +69,14 @@ mind that only recent versions `3.2` and above of tmux support this.
 set -g @fuzzback-popup 1
 ```
 
+### Popup size
+
+You can set the popup size with this option.
+
+```tmux
+set -g @fuzzback-popup-size "90%"
+```
+
 ## Limitations
 
 ### Column movement

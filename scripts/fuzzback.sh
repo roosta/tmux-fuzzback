@@ -26,7 +26,7 @@ fzf_split_cmd() {
 }
 
 fzf_popup_cmd() {
-  fzf-tmux -p \
+  fzf-tmux -p "$1" \
     --delimiter=":" \
     --ansi \
     --with-nth="3.." \
@@ -247,6 +247,7 @@ fuzzback() {
   create_capture_file
 
   enable_popup="$(tmux_get '@fuzzback-popup' 0)"
+  popup_size="$(tmux_get '@fuzzback-popup-size' "50%")"
   pos=$(get_pos)
   pane_height="$(tmux display-message -p '#{pane_height}')"
   pos_rev=$(( pane_height - pos ))
@@ -265,7 +266,7 @@ fuzzback() {
 
   # Combine head and tail when searching with fzf
   if [ "$enable_popup" -eq 1 ];then
-    match=$(cat "$tail_file" "$head_file" | fzf_popup_cmd)
+    match=$(cat "$tail_file" "$head_file" | fzf_popup_cmd "$popup_size")
   else
     match=$(cat "$tail_file" "$head_file" | fzf_split_cmd)
   fi
