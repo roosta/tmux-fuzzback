@@ -39,7 +39,7 @@ fzf_popup_cmd() {
 }
 
 rev_cmd() {
-  if cmd_exists tac;then
+  if cmd_exists tac; then
     tac
   else
     tail -r
@@ -287,7 +287,7 @@ fuzzback() {
   if [ "$(echo "$match" | wc -l)" -gt "1" ]; then
     query="$(head -n 1 <<< "$match")"
     rest="$(tail -n 1 <<< "$match")"
-    trimmed_line=$(echo "$rest" | sed 's/-\?[[:digit:]]\+:[[:space:]]\+[[:digit:]]\+://')
+    trimmed_line=$(echo "$rest" | sed -E 's/-?[0-9]+: +[0-9]+://')
     line_number=$(get_line_number "$rest")
     direction=$(get_direction "$rest")
     column=$(query_column "$query" "$trimmed_line")
