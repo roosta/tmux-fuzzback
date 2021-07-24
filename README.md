@@ -74,7 +74,7 @@ set -g @fuzzback-popup 1
 You can set the popup size with this option.
 
 ```tmux
-set -g @fuzzback-popup-size "90%"
+set -g @fuzzback-popup-size '90%'
 ```
 
 ## Limitations
