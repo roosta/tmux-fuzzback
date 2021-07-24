@@ -57,7 +57,7 @@ The default key-binding is `?` preceded by a prefix, it can be modified by
 setting value to `@fuzzback-bind` in the tmux config like this:
 
 ```tmux
-set -g @fuzzback-bind 's'
+set -g @fuzzback-bind s
 ```
 
 ### Enable popup
@@ -76,6 +76,20 @@ You can set the popup size with this option.
 ```tmux
 set -g @fuzzback-popup-size '90%'
 ```
+
+### fzf bind
+
+If you want to bind some keybinding using fzf --bind that's only used in
+fuzzback set this variable.
+
+```tmux
+set -g @fuzzback-fzf-bind 'ctrl-y:execute-silent(echo -n {2..} | xsel -ib)+abort'
+```
+
+This will copy the line matches in fzf to the clipboard if `xsel` is available.
+
+Refer to [fzf documentation](https://github.com/junegunn/fzf#executing-external-programs) for more details.
+
 
 ## Limitations
 

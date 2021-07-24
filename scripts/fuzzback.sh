@@ -18,6 +18,7 @@ fzf_split_cmd() {
     --delimiter=":" \
     --ansi \
     --with-nth="3.." \
+    --bind="$1" \
     --no-multi \
     --no-sort \
     --no-preview \
@@ -30,6 +31,7 @@ fzf_popup_cmd() {
     --delimiter=":" \
     --ansi \
     --with-nth="3.." \
+    --bind="$2" \
     --no-multi \
     --no-sort \
     --no-preview \
@@ -242,12 +244,15 @@ fuzzback() {
   local match line_number pane_height query max_lines max_jump
   local correct_line_number trimmed_line column pos pos_rev
   local capture_height head_n tail_n
-  local enable_popup
+  local enable_popup popup_size fzf_bind
 
   create_capture_file
 
+  # Options
   enable_popup="$(tmux_get '@fuzzback-popup' 0)"
   popup_size="$(tmux_get '@fuzzback-popup-size' "50%")"
+  fzf_bind="$(tmux_get '@fuzzback-fzf-bind' 'ctrl-y:accept')"
+
   pos=$(get_pos)
   pane_height="$(tmux display-message -p '#{pane_height}')"
   pos_rev=$(( pane_height - pos ))
@@ -266,9 +271,9 @@ fuzzback() {
 
   # Combine head and tail when searching with fzf
   if [ "$enable_popup" -eq 1 ];then
-    match=$(cat "$tail_file" "$head_file" | fzf_popup_cmd "$popup_size")
+    match=$(cat "$tail_file" "$head_file" | fzf_popup_cmd "$popup_size" "$fzf_bind")
   else
-    match=$(cat "$tail_file" "$head_file" | fzf_split_cmd)
+    match=$(cat "$tail_file" "$head_file" | fzf_split_cmd "$fzf_bind")
   fi
 
   if [ "$(echo "$match" | wc -l)" -gt "1" ]; then
