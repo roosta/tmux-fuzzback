@@ -38,6 +38,14 @@ fzf_popup_cmd() {
     --print-query
 }
 
+rev_cmd() {
+  if cmd_exists tac;then
+    tac
+  else
+    tail -r
+  fi
+}
+
 cursor_up() {
   local line_number
   line_number="$1"
@@ -212,7 +220,7 @@ create_head_file() {
   head_filename="$(get_head_filename)"
 	capture_filename="$(get_capture_filename)"
   head -n "$head_n" < "$capture_filename" \
-    | eval "$REV_CMD" \
+    | rev_cmd \
     | nl -b 'a' -s ':' \
     | sed 's/^/1:/' \
     | sed '1s/$/[m/' \
@@ -232,7 +240,7 @@ create_tail_file() {
     echo "$trimmed" > "$tail_filename"
   else
     nl -b 'a' -s ':' < "$tmp_filename" \
-      | eval "$REV_CMD" \
+      | rev_cmd \
       | sed 's/^/-1:/' \
       | sed 's/$/[m/' \
       > "$tail_filename"
