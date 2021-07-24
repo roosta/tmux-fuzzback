@@ -10,6 +10,12 @@ if cmd_exists gawk; then
   AWK_CMD='gawk'
 fi
 
+REV_CMD="tac"
+if ! cmd_exists tac; then
+  REV_CMD="tail -r"
+fi
+
+
 # returns a string unique to current pane
 # sed removes `$` sign because `session_id` contains is
 _pane_unique_id() {

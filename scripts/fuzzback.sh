@@ -212,7 +212,7 @@ create_head_file() {
   head_filename="$(get_head_filename)"
 	capture_filename="$(get_capture_filename)"
   head -n "$head_n" < "$capture_filename" \
-    | tac \
+    | eval "$REV_CMD" \
     | nl -b 'a' -s ':' \
     | sed 's/^/1:/' \
     | sed '1s/$/[m/' \
@@ -232,7 +232,7 @@ create_tail_file() {
     echo "$trimmed" > "$tail_filename"
   else
     nl -b 'a' -s ':' < "$tmp_filename" \
-      | tac \
+      | eval "$REV_CMD" \
       | sed 's/^/-1:/' \
       | sed 's/$/[m/' \
       > "$tail_filename"
