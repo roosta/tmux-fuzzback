@@ -83,7 +83,7 @@ If you want to bind some keybinding using fzf --bind that's only used in
 fuzzback set this variable.
 
 ```tmux
-set -g @fuzzback-fzf-bind 'ctrl-y:execute-silent(echo -n {2..} | xsel -ib)+abort'
+set -g @fuzzback-fzf-bind 'ctrl-y:execute-silent(echo -n {3..} | xsel -ib)+abort'
 ```
 
 This will copy the line matches in fzf to the clipboard if `xsel` is available.
