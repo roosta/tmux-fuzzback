@@ -5,5 +5,6 @@ CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 . "$CURRENT_DIR/scripts/helpers.sh"
 
 key="$(tmux_get '@fuzzback-bind' '?')"
+table="$(tmux_get '@fuzzback-table' 'prefix')"
 
-tmux bind-key "$key" run -b "$CURRENT_DIR/scripts/fuzzback.sh";
+tmux bind-key -T "$table" "$key" run -b "$CURRENT_DIR/scripts/fuzzback.sh";

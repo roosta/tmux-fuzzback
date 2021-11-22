@@ -50,7 +50,6 @@ To use tmux-fuzzback, start it in a tmux session by typing <kbd>prefix</kbd> +
 fzf.
 
 ## Options
-
 ### Key binding
 
 The default key-binding is `?` preceded by a prefix, it can be modified by
@@ -59,6 +58,8 @@ setting value to `@fuzzback-bind` in the tmux config like this:
 ```tmux
 set -g @fuzzback-bind s
 ```
+
+Make sure this setting is set before loading the plugin.
 
 ### Enable popup
 
@@ -90,6 +91,17 @@ This will copy the line matches in fzf to the clipboard if `xsel` is available.
 
 Refer to [fzf documentation](https://github.com/junegunn/fzf#executing-external-programs) for more details.
 
+### Keybind table
+
+Normally the fuzzback keybind will go into the `prefix` table, but if you want
+to activate fuzzback without typing the prefix, you can change the table here.
+Say you wanted to activate fuzzback without prefix:
+
+```tmux
+# this is the same as bind-key -n
+set -g @fuzzback-table 'root'
+```
+Make sure this option, same as keybind, is set before loading the plugin.
 
 ## Limitations
 
