@@ -22,6 +22,7 @@ fzf_split_cmd() {
     --no-multi \
     --no-sort \
     --no-preview \
+    --layout="$fzf_layout" \
     --print-query
 
 }
