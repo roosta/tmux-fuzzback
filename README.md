@@ -80,7 +80,7 @@ set -g @fuzzback-popup-size '90%'
 
 ### fzf layout
 
-You can reverse the direction of fzf by setting this variable
+You can reverse the direction of fzf by setting this variable. The default is `default`
 
 ```tmux
 set -g @fuzzback-fzf-layout 'reverse'
