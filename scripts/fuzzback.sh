@@ -22,6 +22,7 @@ fzf_split_cmd() {
     --no-multi \
     --no-sort \
     --no-preview \
+    --layout="$fzf_layout" \
     --print-query
 
 }
@@ -35,6 +36,7 @@ fzf_popup_cmd() {
     --no-multi \
     --no-sort \
     --no-preview \
+    --layout="$fzf_layout" \
     --print-query
 }
 
@@ -260,6 +262,7 @@ fuzzback() {
   enable_popup="$(tmux_get '@fuzzback-popup' 0)"
   popup_size="$(tmux_get '@fuzzback-popup-size' "50%")"
   fzf_bind="$(tmux_get '@fuzzback-fzf-bind' 'ctrl-y:accept')"
+  fzf_layout="$(tmux_get '@fuzzback-fzf-layout' 'default')"
 
   pos=$(get_pos)
   pane_height="$(tmux display-message -p '#{pane_height}')"
