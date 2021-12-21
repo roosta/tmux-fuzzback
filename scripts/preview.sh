@@ -1,12 +1,26 @@
-# Pull in helpers
-# shellcheck source=helpers.sh
+set -euo pipefail
+IFS=$'\n\t'
 
+REVERSE="\x1b[7m"
+RESET="\x1b[m"
 
 get_line_number() {
   local position
   position=$(echo "$1" | cut -d':' -f2 | xargs)
   echo "$position"
 }
+
+highlight_line() {
+  local content linum
+  content="$1"
+  linum="$2"
+  awk "{ \
+    if (NR == $linum) \
+      { gsub(/\x1b[[0-9;]*m/, \"&$REVERSE\"); printf(\"$REVERSE%s\n$RESET\", \$0); } \
+      else printf(\"$RESET%s\n\", \$0); \
+      }" <<< "$content"
+}
+
 reverse_n() {
   local max min num;
   max="$1"
@@ -25,12 +39,13 @@ preview() {
   total=$(wc -l < "$capture_file")
   half_lines=$(( FZF_PREVIEW_LINES / 2))
   line_rev=$(get_line_number "$match")
-  linum=$(reverse_n "$total" 0 "$line_rev")
+  linum=$(reverse_n "$total" 1 "$line_rev")
 
   [[ $(( linum - half_lines )) -lt 1 ]] && start=1 || start=$(( linum - half_lines ))
   [[ $(( linum + half_lines )) -gt $total ]] && end=$total || end=$(( linum + half_lines ))
   [[ $start -eq 1 &&  $end -ne $total ]] && end=$FZF_PREVIEW_LINES
-  sed -n "${start},${end}p" < "$capture_file"
+  hl=$(highlight_line "$(<"$capture_file")" "$linum")
+  sed -n "${start},${end}p" <<< "$hl"
 }
 
 main() {
