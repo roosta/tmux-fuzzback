@@ -13,6 +13,8 @@ SUPPORTED_VERSION="2.4"
 # shellcheck source=helpers.sh
 . "$CURRENT_DIR/helpers.sh"
 
+CAPTURE_FILENAME="$(get_capture_filename)"
+
 fzf_split_cmd() {
   fzf-tmux -d "70%" \
     --delimiter=":" \
@@ -21,7 +23,7 @@ fzf_split_cmd() {
     --bind="$1" \
     --no-multi \
     --no-sort \
-    --no-preview \
+    --preview="$CURRENT_DIR/preview.sh $CAPTURE_FILENAME {}" \
     --print-query
 
 }
@@ -34,7 +36,7 @@ fzf_popup_cmd() {
     --bind="$2" \
     --no-multi \
     --no-sort \
-    --no-preview \
+    --preview="$CURRENT_DIR/preview.sh $CAPTURE_FILENAME {}" \
     --print-query
 }
 
@@ -205,21 +207,18 @@ get_pos() {
 
 # Store captured scrollback in temp file
 create_capture_file() {
-  local capture_filename
-	capture_filename="$(get_capture_filename)"
 	mkdir -p "$(get_tmp_dir)"
 	chmod 0700 "$(get_tmp_dir)"
-  tmux capture-pane -e -p -S - > "$capture_filename"
+  tmux capture-pane -e -p -S - > "$CAPTURE_FILENAME"
 }
 
 # Create a file that is the head of the scrollback. Ends where the cursor y
 # position was when fuzzback was started
 create_head_file() {
   local head_n="$1"
-  local head_filename capture_filename
+  local head_filename
   head_filename="$(get_head_filename)"
-	capture_filename="$(get_capture_filename)"
-  head -n "$head_n" < "$capture_filename" \
+  head -n "$head_n" < "$CAPTURE_FILENAME" \
     | rev_cmd \
     | nl -b 'a' -s ':' \
     | sed 's/^/1:/' \
@@ -230,11 +229,10 @@ create_head_file() {
 # Create a file that is the content below cursor then starting fuzzback
 create_tail_file() {
   local tail_n="$1"
-  local tail_filename capture_filename trimmed
+  local tail_filename trimmed
   tail_filename="$(get_tail_filename)"
-	capture_filename="$(get_capture_filename)"
   tmp_filename="$(get_tmp_filename)"
-  tail -n "$tail_n" < "$capture_filename" > "$tmp_filename"
+  tail -n "$tail_n" < "$CAPTURE_FILENAME" > "$tmp_filename"
   trimmed=$(cat "$tmp_filename")
   if [ -z "$trimmed" ]; then
     echo "$trimmed" > "$tail_filename"
@@ -264,10 +262,9 @@ fuzzback() {
   pos=$(get_pos)
   pane_height="$(tmux display-message -p '#{pane_height}')"
   pos_rev=$(( pane_height - pos ))
-  capture_file=$(get_capture_filename)
   head_file=$(get_head_filename)
   tail_file=$(get_tail_filename)
-  capture_height=$(wc -l < "$capture_file")
+  capture_height=$(wc -l < "$CAPTURE_FILENAME")
   head_n=$(( capture_height - pos_rev + 1 ))
   tail_n=$(( pos_rev - 1 ))
 
