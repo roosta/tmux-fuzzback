@@ -78,6 +78,14 @@ You can set the popup size with this option.
 set -g @fuzzback-popup-size '90%'
 ```
 
+### fzf layout
+
+You can reverse the direction of fzf by setting this variable. The default is `default`
+
+```tmux
+set -g @fuzzback-fzf-layout 'reverse'
+```
+
 ### fzf bind
 
 If you want to bind some keybinding using fzf --bind that's only used in
