@@ -33,10 +33,11 @@ preview() {
   local linum total half_lines start end total
   match="$2"
   capture_file="$1"
-  # head_file=$(get_head_filename)
-  # tail_file=$(get_tail_filename)
 
-  total=$(wc -l < "$capture_file")
+  # trim trailing newlines
+  trimmed=$(printf "%s" "$(< "$capture_file")")
+
+  total=$(wc -l <<< "$trimmed")
   half_lines=$(( FZF_PREVIEW_LINES / 2))
   line_rev=$(get_line_number "$match")
   linum=$(reverse_n "$total" 1 "$line_rev")
@@ -44,7 +45,7 @@ preview() {
   [[ $(( linum - half_lines )) -lt 1 ]] && start=1 || start=$(( linum - half_lines ))
   [[ $(( linum + half_lines )) -gt $total ]] && end=$total || end=$(( linum + half_lines ))
   [[ $start -eq 1 &&  $end -ne $total ]] && end=$FZF_PREVIEW_LINES
-  hl=$(highlight_line "$(<"$capture_file")" "$linum")
+  hl=$(highlight_line "$trimmed" "$linum")
   sed -n "${start},${end}p" <<< "$hl"
 }
 
