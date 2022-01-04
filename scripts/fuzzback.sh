@@ -13,16 +13,22 @@ SUPPORTED_VERSION="2.4"
 # shellcheck source=helpers.sh
 . "$CURRENT_DIR/helpers.sh"
 
-fzf_split_cmd() {
-  fzf-tmux -d "70%" \
+finder_split_cmd() {
+  local fuzzback_finder="$3"
+  local finder
+
+  finder='fzf-tmux'
+  if [ "$fuzzback_finder" = "sk" ]; then
+    finder='sk-tmux'
+  fi
+  "$finder" -d "70%" \
     --delimiter=":" \
     --ansi \
     --with-nth="3.." \
     --bind="$1" \
     --no-multi \
     --no-sort \
-    --no-preview \
-    --layout="$fzf_layout" \
+    --layout="$2" \
     --print-query
 
 }
@@ -35,8 +41,7 @@ fzf_popup_cmd() {
     --bind="$2" \
     --no-multi \
     --no-sort \
-    --no-preview \
-    --layout="$fzf_layout" \
+    --layout="$3" \
     --print-query
 }
 
@@ -254,15 +259,16 @@ fuzzback() {
   local match line_number pane_height query max_lines max_jump
   local correct_line_number trimmed_line column pos pos_rev
   local capture_height head_n tail_n
-  local enable_popup popup_size fzf_bind
+  local enable_popup popup_size finder_bind finder_layout
 
   create_capture_file
 
   # Options
   enable_popup="$(tmux_get '@fuzzback-popup' 0)"
   popup_size="$(tmux_get '@fuzzback-popup-size' "50%")"
-  fzf_bind="$(tmux_get '@fuzzback-fzf-bind' 'ctrl-y:accept')"
-  fzf_layout="$(tmux_get '@fuzzback-fzf-layout' 'default')"
+  finder_bind="$(tmux_get '@fuzzback-finder-bind' 'ctrl-y:accept')"
+  finder_layout="$(tmux_get '@fuzzback-finder-layout' 'default')"
+  fuzzback_finder="$(tmux_get '@fuzzback-finder' 'fzf')"
 
   pos=$(get_pos)
   pane_height="$(tmux display-message -p '#{pane_height}')"
@@ -282,9 +288,9 @@ fuzzback() {
 
   # Combine head and tail when searching with fzf
   if [ "$enable_popup" -eq 1 ];then
-    match=$(cat "$tail_file" "$head_file" | fzf_popup_cmd "$popup_size" "$fzf_bind")
+    match=$(cat "$tail_file" "$head_file" | fzf_popup_cmd "$popup_size" "$finder_bind" "$finder_layout")
   else
-    match=$(cat "$tail_file" "$head_file" | fzf_split_cmd "$fzf_bind")
+    match=$(cat "$tail_file" "$head_file" | finder_split_cmd "$finder_bind" "$finder_layout" "$fuzzback_finder")
   fi
 
   if [ "$(echo "$match" | wc -l)" -gt "1" ]; then
