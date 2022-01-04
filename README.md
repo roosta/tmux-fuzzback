@@ -18,7 +18,9 @@ it, and give it some love. I also drew more than a little inspiration from
 ## Requirements
 
 - [tmux](https://github.com/tmux/tmux) version >= [2.4](https://github.com/tmux/tmux/releases/tag/2.4)
-- [fzf](https://github.com/junegunn/fzf)
+- A fuzzy finder
+  - [fzf](https://github.com/junegunn/fzf)
+  - [skim](https://github.com/lotabout/skim) - Requires extra [configuration](#fuzzy-finder)
 
 ## Installation
 
@@ -50,6 +52,18 @@ To use tmux-fuzzback, start it in a tmux session by typing <kbd>prefix</kbd> +
 fzf.
 
 ## Options
+### Fuzzy finder
+
+Fuzzback uses `fzf` as default, but you can set it to `sk` if you'd rather use [skim](https://github.com/lotabout/skim)
+
+```tmux
+set -g @fuzzback-finder 'sk'
+```
+
+Fuzzback was built using fzf, and only later did I add support for skim. These
+two finders seem mostly comparable, although I might have missed something.
+Please open an issue if you find any problems with this or other.
+
 ### Key binding
 
 The default key-binding is `?` preceded by a prefix, it can be modified by
@@ -70,6 +84,8 @@ mind that only recent versions `3.2` and above of tmux support this.
 set -g @fuzzback-popup 1
 ```
 
+***Only works with fzf for the time being***
+
 ### Popup size
 
 You can set the popup size with this option.
@@ -78,26 +94,29 @@ You can set the popup size with this option.
 set -g @fuzzback-popup-size '90%'
 ```
 
-### fzf layout
+### Finder layout
 
-You can reverse the direction of fzf by setting this variable. The default is `default`
+You can reverse the direction of selected finder by setting this variable. The
+default is `default`
 
 ```tmux
-set -g @fuzzback-fzf-layout 'reverse'
+set -g @fuzzback-finder-layout 'reverse'
 ```
 
-### fzf bind
+### Finder bind
 
-If you want to bind some keybinding using fzf --bind that's only used in
+If you want to bind some keybinding using sk/fzf --bind that's only used in
 fuzzback set this variable.
 
 ```tmux
-set -g @fuzzback-fzf-bind 'ctrl-y:execute-silent(echo -n {3..} | xsel -ib)+abort'
+set -g @fuzzback-finder-bind 'ctrl-y:execute-silent(echo -n {3..} | xsel -ib)+abort'
 ```
 
-This will copy the line matches in fzf to the clipboard if `xsel` is available.
+This will copy the line matches in selected finder to the clipboard if `xsel` is available.
 
-Refer to [fzf documentation](https://github.com/junegunn/fzf#executing-external-programs) for more details.
+Refer documentation for more:
+- [fzf documentation](https://github.com/junegunn/fzf#executing-external-programs)
+- [skim documentation](https://github.com/lotabout/skim#keymap)
 
 ### Keybind table
 
