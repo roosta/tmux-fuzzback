@@ -17,29 +17,30 @@ CAPTURE_FILENAME="$(get_capture_filename)"
 
 fzf_split_cmd() {
   fzf-tmux -d "70%" \
-    --delimiter=":" \
     --ansi \
-    --with-nth="3.." \
     --bind="$1" \
+    --delimiter=":" \
+    --layout="$fzf_layout" \
     --no-multi \
     --no-sort \
+    --preview-window=nowrap \
     --preview="$CURRENT_DIR/preview.sh $CAPTURE_FILENAME {}" \
-    --layout="$fzf_layout" \
-    --print-query
-
+    --print-query \
+    --with-nth="3.."
 }
 
 fzf_popup_cmd() {
   fzf-tmux -p "$1" \
-    --delimiter=":" \
     --ansi \
-    --with-nth="3.." \
     --bind="$2" \
+    --delimiter=":" \
+    --layout="$fzf_layout" \
     --no-multi \
     --no-sort \
+    --preview-window=nowrap \
     --preview="$CURRENT_DIR/preview.sh $CAPTURE_FILENAME {}" \
-    --layout="$fzf_layout" \
-    --print-query
+    --print-query \
+    --with-nth="3.."
 }
 
 rev_cmd() {
