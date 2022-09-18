@@ -7,4 +7,4 @@ CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 key="$(tmux_get '@fuzzback-bind' '?')"
 table="$(tmux_get '@fuzzback-table' 'prefix')"
 
-tmux bind-key -T "$table" "$key" run -b "$CURRENT_DIR/scripts/fuzzback.sh";
+tmux bind-key -N "Fuzzback through pane history" -T "$table" "$key" run -b "$CURRENT_DIR/scripts/fuzzback.sh";
