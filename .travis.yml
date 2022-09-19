@@ -1,4 +1,4 @@
-dist: xenial
+dist: jammy
 
 before_install:
   - sudo apt-get install -y git-core expect vim
