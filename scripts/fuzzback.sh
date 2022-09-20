@@ -14,7 +14,7 @@ SUPPORTED_VERSION="2.4"
 . "$CURRENT_DIR/helpers.sh"
 
 fzf_split_cmd() {
-  fzf-tmux -d "70%" \
+  fzf-tmux -d 50 \
     --delimiter=":" \
     --ansi \
     --with-nth="3.." \
