@@ -16,7 +16,8 @@ SUPPORTED_VERSION="2.4"
 CAPTURE_FILENAME="$(get_capture_filename)"
 
 fzf_split_cmd() {
-  fzf-tmux -d "70%" \
+  fzf-tmux -d 50 \
+    --delimiter=":" \
     --ansi \
     --bind="$1" \
     --delimiter=":" \
