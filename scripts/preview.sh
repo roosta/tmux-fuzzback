@@ -4,6 +4,11 @@ IFS=$'\n\t'
 REVERSE="\x1b[7m"
 RESET="\x1b[m"
 
+# Pull in helpers
+# shellcheck source=helpers.sh
+CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+. "$CURRENT_DIR/helpers.sh"
+
 get_line_number() {
   local position
   position=$(echo "$1" | cut -d':' -f2 | xargs)
@@ -30,21 +35,28 @@ reverse_n() {
   echo $((max_min - num));
 }
 preview() {
-  local linum total half_lines start end total
+  local linum total half_lines start end total fuzzback_finder preview_lines
+  fuzzback_finder="$(tmux_get '@fuzzback-finder' 'fzf')"
   match="$2"
   capture_file="$1"
+
+  if [ "$fuzzback_finder" = "sk" ]; then
+    preview_lines=$LINES
+  else
+    preview_lines=$FZF_PREVIEW_LINES
+  fi
 
   # trim trailing newlines
   trimmed=$(printf "%s" "$(< "$capture_file")")
 
   total=$(wc -l <<< "$trimmed")
-  half_lines=$(( FZF_PREVIEW_LINES / 2))
+  half_lines=$(( preview_lines / 2))
   line_rev=$(get_line_number "$match")
   linum=$(reverse_n "$total" 1 "$line_rev")
 
   [[ $(( linum - half_lines )) -lt 1 ]] && start=1 || start=$(( linum - half_lines ))
   [[ $(( linum + half_lines )) -gt $total ]] && end=$total || end=$(( linum + half_lines ))
-  [[ $start -eq 1 &&  $end -ne $total ]] && end=$FZF_PREVIEW_LINES
+  [[ $start -eq 1 &&  $end -ne $total ]] && end=$preview_lines
   hl=$(highlight_line "$trimmed" "$linum")
   sed -n "${start},${end}p" <<< "$hl"
 }
