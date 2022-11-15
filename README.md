@@ -64,6 +64,10 @@ Fuzzback was built using fzf, and only later did I add support for skim. These
 two finders seem mostly comparable, although I might have missed something.
 Please open an issue if you find any problems with this or other.
 
+Additionally the popup window doesn't seem to work in sk-tmux, I'm unable to
+open it on `tmux next-3.4` and `sk 0.10.2`, so it isn't currently configured to
+work.
+
 ### Key binding
 
 The default key-binding is `?` preceded by a prefix, it can be modified by
