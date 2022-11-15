@@ -28,7 +28,7 @@ finder_split_cmd() {
     --ansi \
     --bind="$1" \
     --delimiter=":" \
-    --layout="$fzf_layout" \
+    --layout="$finder_layout" \
     --no-multi \
     --no-sort \
     --preview-window=nowrap \
@@ -42,7 +42,7 @@ fzf_popup_cmd() {
     --ansi \
     --bind="$2" \
     --delimiter=":" \
-    --layout="$fzf_layout" \
+    --layout="$finder_layout" \
     --no-multi \
     --no-sort \
     --preview-window=nowrap \
@@ -262,7 +262,6 @@ fuzzback() {
   local correct_line_number trimmed_line column pos pos_rev
   local capture_height head_n tail_n
   local enable_popup popup_size finder_bind finder_layout
-  local fzf_layout
 
   create_capture_file
 
@@ -272,7 +271,6 @@ fuzzback() {
   finder_bind="$(tmux_get '@fuzzback-finder-bind' 'ctrl-y:accept')"
   finder_layout="$(tmux_get '@fuzzback-finder-layout' 'default')"
   fuzzback_finder="$(tmux_get '@fuzzback-finder' 'fzf')"
-  fzf_layout="$(tmux_get '@fuzzback-fzf-layout' 'default')"
 
   pos=$(get_pos)
   pane_height="$(tmux display-message -p '#{pane_height}')"
