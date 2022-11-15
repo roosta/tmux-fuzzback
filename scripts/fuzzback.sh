@@ -13,6 +13,8 @@ SUPPORTED_VERSION="2.4"
 # shellcheck source=helpers.sh
 . "$CURRENT_DIR/helpers.sh"
 
+CAPTURE_FILENAME="$(get_capture_filename)"
+
 finder_split_cmd() {
   local fuzzback_finder="$3"
   local finder
@@ -21,28 +23,32 @@ finder_split_cmd() {
   if [ "$fuzzback_finder" = "sk" ]; then
     finder='sk-tmux'
   fi
-  "$finder" -d "70%" \
+  "$finder" \
     --delimiter=":" \
     --ansi \
-    --with-nth="3.." \
     --bind="$1" \
+    --delimiter=":" \
+    --layout="$fzf_layout" \
     --no-multi \
     --no-sort \
-    --layout="$2" \
-    --print-query
-
+    --preview-window=nowrap \
+    --preview="$CURRENT_DIR/preview.sh $CAPTURE_FILENAME {}" \
+    --print-query \
+    --with-nth="3.."
 }
 
 fzf_popup_cmd() {
   fzf-tmux -p "$1" \
-    --delimiter=":" \
     --ansi \
-    --with-nth="3.." \
     --bind="$2" \
+    --delimiter=":" \
+    --layout="$fzf_layout" \
     --no-multi \
     --no-sort \
-    --layout="$3" \
-    --print-query
+    --preview-window=nowrap \
+    --preview="$CURRENT_DIR/preview.sh $CAPTURE_FILENAME {}" \
+    --print-query \
+    --with-nth="3.."
 }
 
 rev_cmd() {
@@ -212,21 +218,18 @@ get_pos() {
 
 # Store captured scrollback in temp file
 create_capture_file() {
-  local capture_filename
-	capture_filename="$(get_capture_filename)"
 	mkdir -p "$(get_tmp_dir)"
 	chmod 0700 "$(get_tmp_dir)"
-  tmux capture-pane -e -p -S - > "$capture_filename"
+  tmux capture-pane -e -p -S - > "$CAPTURE_FILENAME"
 }
 
 # Create a file that is the head of the scrollback. Ends where the cursor y
 # position was when fuzzback was started
 create_head_file() {
   local head_n="$1"
-  local head_filename capture_filename
+  local head_filename
   head_filename="$(get_head_filename)"
-	capture_filename="$(get_capture_filename)"
-  head -n "$head_n" < "$capture_filename" \
+  head -n "$head_n" < "$CAPTURE_FILENAME" \
     | rev_cmd \
     | nl -b 'a' -s ':' \
     | sed 's/^/1:/' \
@@ -237,11 +240,10 @@ create_head_file() {
 # Create a file that is the content below cursor then starting fuzzback
 create_tail_file() {
   local tail_n="$1"
-  local tail_filename capture_filename trimmed
+  local tail_filename trimmed
   tail_filename="$(get_tail_filename)"
-	capture_filename="$(get_capture_filename)"
   tmp_filename="$(get_tmp_filename)"
-  tail -n "$tail_n" < "$capture_filename" > "$tmp_filename"
+  tail -n "$tail_n" < "$CAPTURE_FILENAME" > "$tmp_filename"
   trimmed=$(cat "$tmp_filename")
   if [ -z "$trimmed" ]; then
     echo "$trimmed" > "$tail_filename"
@@ -260,6 +262,7 @@ fuzzback() {
   local correct_line_number trimmed_line column pos pos_rev
   local capture_height head_n tail_n
   local enable_popup popup_size finder_bind finder_layout
+  local fzf_layout
 
   create_capture_file
 
@@ -269,14 +272,14 @@ fuzzback() {
   finder_bind="$(tmux_get '@fuzzback-finder-bind' 'ctrl-y:accept')"
   finder_layout="$(tmux_get '@fuzzback-finder-layout' 'default')"
   fuzzback_finder="$(tmux_get '@fuzzback-finder' 'fzf')"
+  fzf_layout="$(tmux_get '@fuzzback-fzf-layout' 'default')"
 
   pos=$(get_pos)
   pane_height="$(tmux display-message -p '#{pane_height}')"
   pos_rev=$(( pane_height - pos ))
-  capture_file=$(get_capture_filename)
   head_file=$(get_head_filename)
   tail_file=$(get_tail_filename)
-  capture_height=$(wc -l < "$capture_file")
+  capture_height=$(wc -l < "$CAPTURE_FILENAME")
   head_n=$(( capture_height - pos_rev + 1 ))
   tail_n=$(( pos_rev - 1 ))
 
