@@ -122,6 +122,16 @@ Refer documentation for more:
 - [fzf documentation](https://github.com/junegunn/fzf#executing-external-programs)
 - [skim documentation](https://github.com/lotabout/skim#keymap)
 
+### FZF colors
+
+You can add colors to fuzzback as you do with `fzf`. 
+
+```tmux
+set -g @fuzzback-fzf-colors 'bg+:#100E23,gutter:#323F4E,pointer:#F48FB1,info:#ffe6b3,hl:#F48FB1,hl+:#63f2f1'
+```
+
+All highlight options can be found in fzf's [man page](https://www.mankier.com/1/fzf#--color).
+
 ### Keybind table
 
 Normally the fuzzback keybind will go into the `prefix` table, but if you want
