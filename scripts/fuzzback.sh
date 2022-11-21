@@ -34,7 +34,8 @@ finder_split_cmd() {
     --preview-window=nowrap \
     --preview="$CURRENT_DIR/preview.sh $CAPTURE_FILENAME {}" \
     --print-query \
-    --with-nth="3.."
+    --with-nth="3.." \
+    --color="$4"
 }
 
 fzf_popup_cmd() {
@@ -42,13 +43,14 @@ fzf_popup_cmd() {
     --ansi \
     --bind="$2" \
     --delimiter=":" \
-    --layout="$finder_layout" \
+    --layout="$3" \
     --no-multi \
     --no-sort \
     --preview-window=nowrap \
     --preview="$CURRENT_DIR/preview.sh $CAPTURE_FILENAME {}" \
     --print-query \
-    --with-nth="3.."
+    --with-nth="3.." \
+    --color="$4"
 }
 
 rev_cmd() {
@@ -271,6 +273,7 @@ fuzzback() {
   finder_bind="$(tmux_get '@fuzzback-finder-bind' 'ctrl-y:accept')"
   finder_layout="$(tmux_get '@fuzzback-finder-layout' 'default')"
   fuzzback_finder="$(tmux_get '@fuzzback-finder' 'fzf')"
+  fzf_colors="$(tmux_get '@fuzzback-fzf-colors' 'dark')"
 
   pos=$(get_pos)
   pane_height="$(tmux display-message -p '#{pane_height}')"
@@ -289,9 +292,9 @@ fuzzback() {
 
   # Combine head and tail when searching with fzf
   if [ "$enable_popup" -eq 1 ];then
-    match=$(cat "$tail_file" "$head_file" | fzf_popup_cmd "$popup_size" "$finder_bind" "$finder_layout")
+    match=$(cat "$tail_file" "$head_file" | fzf_popup_cmd "$popup_size" "$finder_bind" "$finder_layout" "$fzf_colors")
   else
-    match=$(cat "$tail_file" "$head_file" | finder_split_cmd "$finder_bind" "$finder_layout" "$fuzzback_finder")
+    match=$(cat "$tail_file" "$head_file" | finder_split_cmd "$finder_bind" "$finder_layout" "$fuzzback_finder" "$fzf_colors")
   fi
 
   if [ "$(echo "$match" | wc -l)" -gt "1" ]; then
