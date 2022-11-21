@@ -273,7 +273,7 @@ fuzzback() {
   finder_bind="$(tmux_get '@fuzzback-finder-bind' 'ctrl-y:accept')"
   finder_layout="$(tmux_get '@fuzzback-finder-layout' 'default')"
   fuzzback_finder="$(tmux_get '@fuzzback-finder' 'fzf')"
-  fzf_colors="$(tmux_get '@fuzzback-fzf-colors' '')"
+  fzf_colors="$(tmux_get '@fuzzback-fzf-colors' 'dark')"
 
   pos=$(get_pos)
   pane_height="$(tmux display-message -p '#{pane_height}')"
