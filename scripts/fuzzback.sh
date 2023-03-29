@@ -17,7 +17,12 @@ CAPTURE_FILENAME="$(get_capture_filename)"
 
 finder_split_cmd() {
   local fuzzback_finder="$3"
+  local enable_preview="$5"
   local finder
+  local opts=()
+  if [ "$enable_preview" -eq 1 ];then
+    opts=(--preview="$CURRENT_DIR/preview.sh $CAPTURE_FILENAME {}" --preview-window=nowrap)
+  fi
 
   finder='fzf-tmux'
   if [ "$fuzzback_finder" = "sk" ]; then
@@ -31,14 +36,19 @@ finder_split_cmd() {
     --layout="$finder_layout" \
     --no-multi \
     --no-sort \
-    --preview-window=nowrap \
-    --preview="$CURRENT_DIR/preview.sh $CAPTURE_FILENAME {}" \
     --print-query \
     --with-nth="3.." \
-    --color="$4"
+    --color="$4" \
+    "${opts[@]}"
 }
 
 fzf_popup_cmd() {
+  local opts
+  local enable_preview="$5"
+  if [ "$enable_preview" -eq 1 ];then
+    opts=(--preview="$CURRENT_DIR/preview.sh $CAPTURE_FILENAME {}" --preview-window=nowrap)
+  fi
+
   fzf-tmux -p "$1" \
     --ansi \
     --bind="$2" \
@@ -46,11 +56,10 @@ fzf_popup_cmd() {
     --layout="$3" \
     --no-multi \
     --no-sort \
-    --preview-window=nowrap \
-    --preview="$CURRENT_DIR/preview.sh $CAPTURE_FILENAME {}" \
     --print-query \
     --with-nth="3.." \
-    --color="$4"
+    --color="$4" \
+    "${opts[@]}"
 }
 
 rev_cmd() {
@@ -274,6 +283,7 @@ fuzzback() {
   finder_layout="$(tmux_get '@fuzzback-finder-layout' 'default')"
   fuzzback_finder="$(tmux_get '@fuzzback-finder' 'fzf')"
   fzf_colors="$(tmux_get '@fuzzback-fzf-colors' 'dark')"
+  fzf_enable_preview="$(tmux_get '@fuzzback-enable-preview' 1)"
 
   pos=$(get_pos)
   pane_height="$(tmux display-message -p '#{pane_height}')"
@@ -292,9 +302,9 @@ fuzzback() {
 
   # Combine head and tail when searching with fzf
   if [ "$enable_popup" -eq 1 ];then
-    match=$(cat "$tail_file" "$head_file" | fzf_popup_cmd "$popup_size" "$finder_bind" "$finder_layout" "$fzf_colors")
+    match=$(cat "$tail_file" "$head_file" | fzf_popup_cmd "$popup_size" "$finder_bind" "$finder_layout" "$fzf_colors" "$fzf_enable_preview")
   else
-    match=$(cat "$tail_file" "$head_file" | finder_split_cmd "$finder_bind" "$finder_layout" "$fuzzback_finder" "$fzf_colors")
+    match=$(cat "$tail_file" "$head_file" | finder_split_cmd "$finder_bind" "$finder_layout" "$fuzzback_finder" "$fzf_colors" "$fzf_enable_preview")
   fi
 
   if [ "$(echo "$match" | wc -l)" -gt "1" ]; then
