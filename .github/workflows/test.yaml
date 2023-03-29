@@ -1,0 +1,36 @@
+---
+name: Run tests
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: Testing
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install deps
+        run: sudo apt-get install -y expect vim build-essentials autotools-dev autoconf pkg-config-bison wget tar libevent-dev libncurses-dev
+
+      - name: Build latest tmux
+        with:
+          repository: tmux/tmux
+        run: |
+          sh autogen.sh
+          ./configure && make && sudo make install
+
+      - name: Install latest fzf
+        with:
+          repository: junegunn/fzf
+        run:
+          ./install --all
+
+      - name: Run tests in isolation
+        run:
+          ./run_tests_in_isolation
+
