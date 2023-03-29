@@ -3,7 +3,13 @@ name: Run tests
 on:
   workflow_dispatch:
   push:
+    branches:
+      - main
+      - feat/github-workflow
   pull_request:
+    - main
+    paths:
+      - .github/workflows/test.yml
 
 jobs:
   test:
