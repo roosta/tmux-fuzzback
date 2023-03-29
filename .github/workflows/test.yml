@@ -1,15 +1,10 @@
+---
 name: Run tests
 
 on:
-  workflow_dispatch:
   push:
-    branches:
-      - main
-      - feat/github-workflow
   pull_request:
-    - main
-    paths:
-      - .github/workflows/test.yml
+    branches: [$default-branch]
 
 jobs:
   test:
@@ -24,9 +19,7 @@ jobs:
       - name: Build latest tmux
         with:
           repository: tmux/tmux
-        run: |
-          sh autogen.sh
-          ./configure && make && sudo make install
+        run: sh autogen.sh && ./configure && make && sudo make install
 
       - name: Install latest fzf
         with:
