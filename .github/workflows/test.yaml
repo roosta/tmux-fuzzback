@@ -14,7 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install deps
+      - name: Install dependencies
         run: sudo apt-get install -y expect vim build-essentials autotools-dev autoconf pkg-config-bison wget tar libevent-dev libncurses-dev
 
       - name: Build latest tmux
