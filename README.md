@@ -90,14 +90,16 @@ set -g @fuzzback-popup 1
 
 ***Only works with fzf for the time being***
 
-### Disable preview
+### Hide preview
 
-Preview is enabled by default, but you can turn it of by setting
-`fuzzback-enable-preview` to `0`.
+Preview is shown by default, but you can hide it initially by setting
+`fuzzback-hide-preview` to `1`.
 
 ```tmux
-set -g @fuzzback-enable-preview 0
+set -g @fuzzback-hide-preview 1
 ```
+
+You can still toggle it back with your preferred keybinding (fzf default <kbd>ctrl+p</kbd>)
 
 ### Popup size
 
