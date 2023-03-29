@@ -19,9 +19,9 @@ finder_split_cmd() {
   local fuzzback_finder="$3"
   local enable_preview="$5"
   local finder
-  local opts=()
-  if [ "$enable_preview" -eq 1 ];then
-    opts=(--preview="$CURRENT_DIR/preview.sh $CAPTURE_FILENAME {}" --preview-window=nowrap)
+  local preview_window="nowrap"
+  if [ "$enable_preview" -eq 0 ];then
+    preview_window=":hidden,nowrap"
   fi
 
   finder='fzf-tmux'
@@ -39,7 +39,8 @@ finder_split_cmd() {
     --print-query \
     --with-nth="3.." \
     --color="$4" \
-    "${opts[@]}"
+    --preview="$CURRENT_DIR/preview.sh $CAPTURE_FILENAME {}" \
+    --preview-window="$preview_window"
 }
 
 fzf_popup_cmd() {
