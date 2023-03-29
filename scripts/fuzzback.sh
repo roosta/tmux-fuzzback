@@ -285,7 +285,7 @@ fuzzback() {
   finder_layout="$(tmux_get '@fuzzback-finder-layout' 'default')"
   fuzzback_finder="$(tmux_get '@fuzzback-finder' 'fzf')"
   fzf_colors="$(tmux_get '@fuzzback-fzf-colors' 'dark')"
-  fzf_hide_preview="$(tmux_get '@fuzzback-hide-preview' 1)"
+  fzf_hide_preview="$(tmux_get '@fuzzback-hide-preview' 0)"
 
   pos=$(get_pos)
   pane_height="$(tmux display-message -p '#{pane_height}')"
