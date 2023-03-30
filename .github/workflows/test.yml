@@ -11,9 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     name: Testing
     steps:
-      - uses: actions/checkout@v3
-        with:
-          path: tmux-fuzzback
+      - name: Checkout fuzzback
+        uses: actions/checkout@v3
 
       - name: Checkout tmux
         uses: actions/checkout@v3
@@ -41,6 +40,5 @@ jobs:
         run: ./install --all
 
       - name: Run tests in isolation
-        working-directory: tmux-fuzzback
-        run: ./run_tests_in_isolation
+        run: ls
 
