@@ -40,5 +40,5 @@ jobs:
         run: ./install --all
 
       - name: Run tests in isolation
-        run: ls
+        run: tests/run_tests_in_isolation
 
