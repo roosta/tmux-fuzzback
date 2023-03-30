@@ -14,12 +14,6 @@ jobs:
       - name: Checkout fuzzback
         uses: actions/checkout@v3
 
-      - name: Checkout tmux
-        uses: actions/checkout@v3
-        with:
-          repository: tmux/tmux
-          path: tmux
-
       - name: Checkout fzf
         uses: actions/checkout@v3
         with:
@@ -27,18 +21,12 @@ jobs:
           path: fzf
 
       - name: Install dependencies
-        run: sudo apt-get install -y expect vim build-essential libtool autotools-dev autoconf pkg-config bison wget tar libevent-dev libncurses-dev
-
-      - name: Build latest tmux
-        working-directory: tmux
-        run: |
-          sh autogen.sh
-          ./configure && make && sudo make install
+        run: sudo apt-get install -y expect vim wget tar tmux
 
       - name: Install latest fzf
         working-directory: fzf
         run: ./install --all
 
       - name: Run tests in isolation
-        run: tmux -V
+        run: tests/run_tests_in_isolation
 
