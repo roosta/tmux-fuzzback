@@ -11,24 +11,30 @@ jobs:
     runs-on: ubuntu-latest
     name: Testing
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout tmux
+        uses: actions/checkout@v3
+        with:
+          repository: tmux/tmux
+          path: tmux
+
+      - name: Checkout tmux
+        uses: actions/checkout@v3
+        with:
+          repository: junegunn/fzf
+          path: fzf
 
       - name: Install dependencies
         run: sudo apt-get install -y expect vim build-essentials autotools-dev autoconf pkg-config-bison wget tar libevent-dev libncurses-dev
 
       - name: Build latest tmux
-        uses: actions/checkout@v3
-        with:
-          repository: tmux/tmux
         run: |
+          cd tmux
           sh autogen.sh
           ./configure && make && sudo make install
 
       - name: Install latest fzf
-        uses: actions/checkout@v3
-        with:
-          repository: junegunn/fzf
-        run:
+        run: |
+          cd fzf
           ./install --all
 
       - name: Run tests in isolation
