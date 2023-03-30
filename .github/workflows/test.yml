@@ -40,5 +40,5 @@ jobs:
         run: ./install --all
 
       - name: Run tests in isolation
-        run: tmux -V
+        run: tmux
 
