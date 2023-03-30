@@ -8,7 +8,7 @@ log_user 0
 set timeout 5
 
 # Setup tmux
-spawn tmux new-session -s workspace
+spawn tmux
 sleep 1
 
 # }}}
