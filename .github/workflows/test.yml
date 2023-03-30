@@ -11,6 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     name: Testing
     steps:
+      - uses: actions/checkout@v3
+        with:
+          path: tmux-fuzzback
+
       - name: Checkout tmux
         uses: actions/checkout@v3
         with:
@@ -27,17 +31,16 @@ jobs:
         run: sudo apt-get install -y expect vim build-essential libtool autotools-dev autoconf pkg-config bison wget tar libevent-dev libncurses-dev
 
       - name: Build latest tmux
+        working-directory: tmux
         run: |
-          cd tmux
           sh autogen.sh
           ./configure && make && sudo make install
 
       - name: Install latest fzf
-        run: |
-          cd fzf
-          ./install --all
+        working-directory: fzf
+        run: ./install --all
 
       - name: Run tests in isolation
-        run:
-          ./run_tests_in_isolation
+        working-directory: tmux-fuzzback
+        run: ./run_tests_in_isolation
 
