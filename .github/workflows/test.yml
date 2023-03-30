@@ -17,14 +17,14 @@ jobs:
           repository: tmux/tmux
           path: tmux
 
-      - name: Checkout tmux
+      - name: Checkout fzf
         uses: actions/checkout@v3
         with:
           repository: junegunn/fzf
           path: fzf
 
       - name: Install dependencies
-        run: sudo apt-get install -y expect vim build-essentials autotools-dev autoconf pkg-config-bison wget tar libevent-dev libncurses-dev
+        run: sudo apt-get install -y expect vim build-essential libtool autotools-dev autoconf pkg-config bison wget tar libevent-dev libncurses-dev
 
       - name: Build latest tmux
         run: |
