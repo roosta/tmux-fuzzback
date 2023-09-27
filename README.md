@@ -32,7 +32,7 @@ set -g @plugin 'roosta/tmux-fuzzback'
 
 ### Manually
 ```shell
-git clone https://github.com/roosta/tmux-fuzzback
+git clone https://github.com/roosta/tmux-fuzzback.git
 ```
 
 Add this to the bottom of `.tmux.conf`
