@@ -35,7 +35,6 @@ finder_split_cmd() {
     --delimiter=":" \
     --layout="$finder_layout" \
     --no-multi \
-    --no-sort \
     --print-query \
     --with-nth="3.." \
     --color="$4" \
@@ -56,7 +55,6 @@ fzf_popup_cmd() {
     --delimiter=":" \
     --layout="$3" \
     --no-multi \
-    --no-sort \
     --print-query \
     --with-nth="3.." \
     --color="$4" \
