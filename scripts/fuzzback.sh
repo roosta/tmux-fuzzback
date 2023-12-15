@@ -19,9 +19,9 @@ finder_split_cmd() {
   local fuzzback_finder="$3"
   local hide_preview="$5"
   local finder
-  local preview_window="nowrap"
+  local preview_window=""
   if [ "$hide_preview" -eq 1 ];then
-    preview_window=":hidden,nowrap"
+    preview_window=":hidden"
   fi
 
   finder='fzf-tmux'
@@ -44,9 +44,9 @@ finder_split_cmd() {
 
 fzf_popup_cmd() {
   local hide_preview="$5"
-  local preview_window="nowrap"
+  local preview_window=""
   if [ "$hide_preview" -eq 1 ];then
-    preview_window=":hidden,nowrap"
+    preview_window=":hidden"
   fi
 
   fzf-tmux -p "$1" \
