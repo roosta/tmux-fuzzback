@@ -129,9 +129,20 @@ set -g @fuzzback-finder-bind 'ctrl-y:execute-silent(echo -n {3..} | xsel -ib)+ab
 
 This will copy the line matches in selected finder to the clipboard if `xsel` is available.
 
+
 Refer documentation for more:
 - [fzf documentation](https://github.com/junegunn/fzf#executing-external-programs)
 - [skim documentation](https://github.com/lotabout/skim#keymap)
+
+#### Toggling sort
+
+If you need to toggle sort on and off you could add this to your fuzzback config
+
+- ref: https://github.com/roosta/tmux-fuzzback/issues/23
+
+```tmux
+set -g @fuzzback-finder-bind 'ctrl-s:toggle-sort'
+```
 
 ### FZF colors
 
