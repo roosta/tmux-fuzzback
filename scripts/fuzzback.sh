@@ -334,11 +334,15 @@ fuzzback() {
 
 version_ok() {
   "$CURRENT_DIR/supported.sh" "$SUPPORTED_VERSION"
+  return $?
 }
 
 main() {
   if version_ok; then
     fuzzback
+  else
+    # Exit when version check fails and after message is displayed
+    exit 1
   fi
 }
 

@@ -4,6 +4,7 @@
 
 VERSION="$1"
 UNSUPPORTED_MSG="$2"
+DISPLAY_MSG="${3:-1}"  # Third param controls if message is displayed, defaults to 1 (yes)
 
 fuzzback::tmux_option() {
   local option default_value option_value
@@ -71,9 +72,12 @@ fuzzback::check() {
   local current_version="$1"
   local supported_version="$2"
   if [ "$current_version" -lt "$supported_version" ]; then
-    fuzzback::display "$(fuzzback::unsupported_msg)"
-    exit 1
+    if [ "$DISPLAY_MSG" -eq 1 ]; then
+      fuzzback::display "$(fuzzback::unsupported_msg)"
+    fi
+    return 1
   fi
+  return 0
 }
 
 main() {
@@ -81,5 +85,7 @@ main() {
   supported_version_int="$(fuzzback::digits "$VERSION")"
   current_version_int="$(fuzzback::version_int)"
   fuzzback::check "$current_version_int" "$supported_version_int"
+  return $?
 }
 main
+exit $?
