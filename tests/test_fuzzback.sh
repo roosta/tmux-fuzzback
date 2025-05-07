@@ -8,8 +8,10 @@ fail_helper() {
 	TEST_STATUS="fail"
 }
 
+TERM="tmux-256color"
+
 # Do tests with expect
-/app/tests/expect_fuzzback.exp || fail_helper "Testing failed!"
+tests/expect_fuzzback.exp || fail_helper "Testing failed!"
 
 if [ "$TEST_STATUS" == "fail" ]; then
   echo "FAIL!"
