@@ -1,0 +1,29 @@
+---
+name: Run tests
+
+on:
+  push:
+  pull_request:
+    branches: [$default-branch]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: Testing
+    steps:
+      - name: Checkout fuzzback
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: sudo apt update && sudo apt install -y expect vim fzf tmux
+
+      - name: Create tmux config
+        run: |
+          echo 'setw -g mode-keys vi' > /tmp/tmux.conf
+          echo "run-shell '${GITHUB_WORKSPACE}/fuzzback.tmux'" >> /tmp/tmux.conf
+          sudo cp /tmp/tmux.conf /etc/tmux.conf
+
+      - name: Run tests
+        run: |
+          TERM="tmux-256color" script -e -c "./tests/test_fuzzback.sh" /dev/null
+
