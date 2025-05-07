@@ -176,11 +176,13 @@ match can be found.
 
 ## Developing
 
-You can run tests locally using [Vagrant](https://www.vagrantup.com/) by calling:
+You can run tests locally using a [Containerfile](./Containerfile), in my case I use
+[Podman](https://podman.io/) to build and run.
 
 ```sh
 # cd project root
-./run_tests
+podman build -t fuzzback-test .
+podman run -it --name fuzzback-test fuzzback-test:lastest
 ```
 
 ## License
