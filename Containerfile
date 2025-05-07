@@ -2,7 +2,7 @@ FROM alpine:latest
 
 WORKDIR /app
 COPY . ./
-COPY ./tests/.tmux.conf /etc/tmux.conf
+COPY ./tests/tmux.conf /etc
 
 RUN apk update && apk add --no-cache bash fzf fzf-tmux vim tmux expect
 
