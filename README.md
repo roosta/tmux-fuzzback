@@ -182,7 +182,7 @@ You can run tests locally using a [Containerfile](./Containerfile), in my case I
 ```sh
 # cd project root
 podman build -t fuzzback-test .
-podman run -it --name fuzzback-test fuzzback-test:lastest
+podman run -it --name fuzzback-test fuzzback-test:latest
 ```
 
 ## License
